@@ -27,7 +27,6 @@ func _ready() -> void:
 
 func _create_host() -> void:
 	var peer := ENetMultiplayerPeer.new()
-
 	var error := peer.create_server(PORT, 5)
 
 	if error != OK:
@@ -35,22 +34,18 @@ func _create_host() -> void:
 		return
 
 	multiplayer.multiplayer_peer = peer
-
 	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_on_player_disconnected)
 
 	print("================================")
-	print("СЕРВЕР ЗАПУЩЕН")
-	print("МОЙ ID: ", multiplayer.get_unique_id())
+	print("СЕРВЕР ЗАПУЩЕН | МОЙ ID: ", multiplayer.get_unique_id())
 	print("================================")
 
-	# Создаём игрока хоста
 	_create_player(
 		multiplayer.get_unique_id(),
-		get_spawn_position(multiplayer.get_unique_id())
+		get_spawn_position()
 	)
 
-	# Убираем меню
 	$Control.queue_free()
 
 
@@ -60,7 +55,6 @@ func _create_host() -> void:
 
 func _join_host() -> void:
 	var peer := ENetMultiplayerPeer.new()
-
 	var error := peer.create_client(SERVER_IP, PORT)
 
 	if error != OK:
@@ -68,7 +62,6 @@ func _join_host() -> void:
 		return
 
 	multiplayer.multiplayer_peer = peer
-
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 
@@ -76,16 +69,11 @@ func _join_host() -> void:
 
 
 func _on_connected_to_server() -> void:
-	var my_id := multiplayer.get_unique_id()
-
 	print("================================")
-	print("ПОДКЛЮЧИЛСЯ")
-	print("МОЙ ID: ", my_id)
+	print("ПОДКЛЮЧИЛСЯ | МОЙ ID: ", multiplayer.get_unique_id())
 	print("================================")
 
-	# Просим сервер прислать игроков
 	request_players.rpc_id(1)
-
 	$Control.queue_free()
 
 
@@ -94,7 +82,7 @@ func _on_connection_failed() -> void:
 
 
 # ============================================================
-# PLAYER CONNECTED
+# PLAYER CONNECTED / DISCONNECTED
 # ============================================================
 
 func _on_player_connected(id: int) -> void:
@@ -103,143 +91,75 @@ func _on_player_connected(id: int) -> void:
 	if not multiplayer.is_server():
 		return
 
-	# Создаём нового игрока на сервере
-	var spawn_position := get_spawn_position(id)
-
+	var spawn_position := get_spawn_position()
 	_create_player(id, spawn_position)
-
-	# Рассылаем всем информацию о новом игроке
 	spawn_player.rpc(id, spawn_position)
 
 
-# ============================================================
-# PLAYER DISCONNECTED
-# ============================================================
-
 func _on_player_disconnected(id: int) -> void:
 	print("Игрок отключился. ID: ", id)
-
-	var player := players.get_node_or_null(str(id))
-
-	if player:
-		player.queue_free()
-
+	remove_player(id)
 	remove_player.rpc(id)
 
 
 # ============================================================
-# CREATE LOCAL PLAYER
+# CREATE & SPAWN LOGIC
 # ============================================================
 
-func _create_player(
-	id: int,
-	spawn_position: Vector2
-) -> void:
-
+func _create_player(id: int, spawn_position: Vector2) -> void:
+	# Если нода с таким точным именем уже есть — ничего не делаем
 	if players.has_node(str(id)):
 		return
 
 	var player := PLAYER_SCENE.instantiate()
-
 	player.name = str(id)
-
-	# ВОТ ЭТО ОЧЕНЬ ВАЖНО
 	player.set_multiplayer_authority(id)
-
 	player.position = spawn_position
 
-	players.add_child(player, true)
+	# КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Второй аргумент НЕ должен быть true!
+	players.add_child(player, false)
 
-	print(
-		"Создан Player ",
-		id,
-		" | authority = ",
-		player.get_multiplayer_authority()
-	)
+	print("Создан Player ", id, " | Authority: ", player.get_multiplayer_authority())
 
-
-# ============================================================
-# SPAWN NEW PLAYER
-# ============================================================
 
 @rpc("authority", "call_remote", "reliable")
-func spawn_player(
-	id: int,
-	spawn_position: Vector2
-) -> void:
-
+func spawn_player(id: int, spawn_position: Vector2) -> void:
 	_create_player(id, spawn_position)
 
 
-# ============================================================
-# REQUEST ALL PLAYERS
-# ============================================================
-
 @rpc("any_peer", "call_remote", "reliable")
 func request_players() -> void:
-
 	if not multiplayer.is_server():
 		return
 
 	var requester := multiplayer.get_remote_sender_id()
-
 	var ids: Array[int] = []
 	var positions: Array[Vector2] = []
 
 	for player in players.get_children():
-
 		ids.append(int(player.name))
 		positions.append(player.global_position)
 
-	send_players.rpc_id(
-		requester,
-		ids,
-		positions
-	)
+	send_players.rpc_id(requester, ids, positions)
 
-
-# ============================================================
-# RECEIVE ALL PLAYERS
-# ============================================================
 
 @rpc("authority", "call_remote", "reliable")
-func send_players(
-	ids: Array[int],
-	positions: Array[Vector2]
-) -> void:
-
+func send_players(ids: Array[int], positions: Array[Vector2]) -> void:
 	for i in range(ids.size()):
+		_create_player(ids[i], positions[i])
 
-		var id := ids[i]
-
-		if players.has_node(str(id)):
-			continue
-
-		_create_player(
-			id,
-			positions[i]
-		)
-
-
-# ============================================================
-# REMOVE PLAYER
-# ============================================================
 
 @rpc("authority", "call_remote", "reliable")
 func remove_player(id: int) -> void:
-
 	var player := players.get_node_or_null(str(id))
-
 	if player:
 		player.queue_free()
 
 
 # ============================================================
-# SPAWN POSITION
+# SPAWN POSITION (Индекс по количеству игроков)
 # ============================================================
 
-func get_spawn_position(id: int) -> Vector2:
-
-	var index := (id - 1) % SPAWN_POSITIONS.size()
-
+func get_spawn_position() -> Vector2:
+	var index := players.get_child_count() % SPAWN_POSITIONS.size()
 	return SPAWN_POSITIONS[index]
