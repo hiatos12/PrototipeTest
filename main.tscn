@@ -60,9 +60,6 @@ horizontal_alignment = 1
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1436733147]
 _spawnable_scenes = PackedStringArray("uid://bidm5de2a71e8")
-spawn_path = NodePath("../Multiplayer")
-
-[node name="Multiplayer" type="Node" parent="." unique_id=631617702]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1656602819]
 position = Vector2(34, 0)
@@ -87,3 +84,5 @@ position = Vector2(454, 168)
 [node name="Spawn3" type="Node2D" parent="SpawnPoints" unique_id=125821505]
 
 [node name="Spawn4" type="Node2D" parent="SpawnPoints" unique_id=1825800058]
+
+[node name="Multiplayer" type="Node2D" parent="." unique_id=311234247]

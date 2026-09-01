@@ -1,50 +1,137 @@
 extends CharacterBody2D
 
+
 @export_category("Movement")
 @export var speed: float = 300.0
 @export var acceleration: float = 1800.0
 @export var friction: float = 2200.0
 
+
 @export_category("Jump")
 @export var jump_velocity: float = -550.0
 @export var gravity: float = 1400.0
 
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 
+func _ready() -> void:
+
+	print(
+		"PLAYER READY | ID = ",
+		get_multiplayer_authority(),
+		" | MY ID = ",
+		multiplayer.get_unique_id(),
+		" | CAN CONTROL = ",
+		is_multiplayer_authority()
+	)
+
+
+# ============================================================
+# PHYSICS
+# ============================================================
+
 func _physics_process(delta: float) -> void:
-	# Управляет только владелeц персонажа
+
+	# ========================================================
+	# САМОЕ ГЛАВНОЕ
+	#
+	# Каждый компьютер управляет ТОЛЬКО своим CharacterBody2D.
+	# ========================================================
+
 	if not is_multiplayer_authority():
 		return
 
-	# ГРАВИТАЦИЯ
+
+	# ========================================================
+	# GRAVITY
+	# ========================================================
+
 	if not is_on_floor():
+
 		velocity.y += gravity * delta
 
-	# УПРАВЛЕНИЕ
+
+	# ========================================================
+	# INPUT
+	# ========================================================
+
 	var direction := 0.0
+
+
 	if Input.is_key_pressed(KEY_A):
 		direction -= 1.0
+
+
 	if Input.is_key_pressed(KEY_D):
 		direction += 1.0
 
-	# ДВИЖЕНИЕ
-	if direction != 0.0:
-		velocity.x = move_toward(velocity.x, direction * speed, acceleration * delta)
-		animated_sprite.flip_h = direction < 0.0
-	else:
-		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
 
-	# ПРЫЖОК
-	if Input.is_key_pressed(KEY_SPACE) and is_on_floor():
-		velocity.y = jump_velocity
+	# ========================================================
+	# HORIZONTAL MOVEMENT
+	# ========================================================
+
+	if direction != 0.0:
+
+		velocity.x = move_toward(
+			velocity.x,
+			direction * speed,
+			acceleration * delta
+		)
+
+
+		animated_sprite.flip_h = direction < 0.0
+
+
+	else:
+
+		velocity.x = move_toward(
+			velocity.x,
+			0.0,
+			friction * delta
+		)
+
+
+	# ========================================================
+	# JUMP
+	# ========================================================
+
+	if Input.is_key_pressed(KEY_SPACE):
+
+		if is_on_floor():
+
+			velocity.y = jump_velocity
+
+
+	# ========================================================
+	# MOVE
+	# ========================================================
 
 	move_and_slide()
+
+
+	# ========================================================
+	# ANIMATION
+	# ========================================================
+
 	update_animation()
 
-	# СИНХРОНИЗАЦИЯ С ДРУГИМИ КЛИЕНТАМИ
-	sync_player.rpc(global_position, velocity, animated_sprite.flip_h, get_animation_name())
 
+	# ========================================================
+	# NETWORK
+	# ========================================================
+
+	sync_player.rpc(
+		global_position,
+		velocity,
+		animated_sprite.flip_h,
+		get_animation_name()
+	)
+
+
+# ============================================================
+# NETWORK SYNCHRONIZATION
+# ============================================================
 
 @rpc("any_peer", "unreliable")
 func sync_player(
@@ -53,31 +140,93 @@ func sync_player(
 	flip_h: bool,
 	animation_name: String
 ) -> void:
-	# Владелец игнорирует входящий RPC о самом себе
+
+	# ========================================================
+	# Если это мой персонаж — ничего не делаем.
+	# Он управляется локально.
+	# ========================================================
+
 	if is_multiplayer_authority():
 		return
 
+
+	# ========================================================
+	# Получаем состояние другого игрока.
+	# ========================================================
+
 	global_position = new_position
+
 	velocity = new_velocity
+
 	animated_sprite.flip_h = flip_h
 
-	if animated_sprite.sprite_frames.has_animation(animation_name):
-		animated_sprite.play(animation_name)
 
+	# ========================================================
+	# Анимация приходит от владельца.
+	# ========================================================
+
+	if animated_sprite.sprite_frames.has_animation(
+		animation_name
+	):
+
+		animated_sprite.play(
+			animation_name
+		)
+
+
+# ============================================================
+# ANIMATION
+# ============================================================
 
 func update_animation() -> void:
-	if not is_on_floor():
-		if velocity.y < 0.0:
-			animated_sprite.play("Jump")
-		else:
-			animated_sprite.play("Fall")
-	elif abs(velocity.x) > 20.0:
-		animated_sprite.play("Walk")
-	else:
-		animated_sprite.play("Idle")
 
+	if not is_on_floor():
+
+		if velocity.y < 0.0:
+
+			animated_sprite.play(
+				"Jump"
+			)
+
+		else:
+
+			animated_sprite.play(
+				"Fall"
+			)
+
+
+	elif abs(velocity.x) > 20.0:
+
+		animated_sprite.play(
+			"Walk"
+		)
+
+
+	else:
+
+		animated_sprite.play(
+			"Idle"
+		)
+
+
+# ============================================================
+# GET CURRENT ANIMATION
+# ============================================================
 
 func get_animation_name() -> String:
+
 	if not is_on_floor():
-		return "Jump" if velocity.y < 0.0 else "Fall"
-	return "Walk" if abs(velocity.x) > 20.0 else "Idle"
+
+		if velocity.y < 0.0:
+
+			return "Jump"
+
+		return "Fall"
+
+
+	if abs(velocity.x) > 20.0:
+
+		return "Walk"
+
+
+	return "Idle"
