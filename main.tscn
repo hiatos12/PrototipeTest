@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://cafo11jblajgm"]
+
+[ext_resource type="Script" uid="uid://bfkvktmkwhw4s" path="res://main.gd" id="1_ig7tw"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ons5f"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ons5f"]
+size = Vector2(1326, 20)
+
+[node name="Main" type="Node2D" unique_id=1325462863]
+position = Vector2(-3, -2)
+script = ExtResource("1_ig7tw")
+
+[node name="Control" type="Control" parent="." unique_id=290925287]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="Control" unique_id=1375787542]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 237.0
+offset_right = 314.0
+offset_bottom = 420.0
+
+[node name="UI" type="CanvasLayer" parent="Control/Panel" unique_id=152500159]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel/UI" unique_id=883117867]
+offset_left = 42.0
+offset_top = 241.0
+offset_right = 302.0
+offset_bottom = 354.0
+
+[node name="NameInput" type="LineEdit" parent="Control/Panel/UI/VBoxContainer" unique_id=430203361]
+visible = false
+layout_mode = 2
+placeholder_text = "Name"
+alignment = 1
+
+[node name="RoomInput" type="LineEdit" parent="Control/Panel/UI/VBoxContainer" unique_id=1979655667]
+visible = false
+layout_mode = 2
+placeholder_text = "Code"
+alignment = 1
+
+[node name="CreateButton" type="Button" parent="Control/Panel/UI/VBoxContainer" unique_id=1608783135]
+layout_mode = 2
+text = "Create"
+
+[node name="JoinButton" type="Button" parent="Control/Panel/UI/VBoxContainer" unique_id=1945922089]
+layout_mode = 2
+text = "Join"
+
+[node name="StatusLabel" type="Label" parent="Control/Panel/UI/VBoxContainer" unique_id=754259533]
+layout_mode = 2
+text = "Zyro Fyrru"
+label_settings = SubResource("LabelSettings_ons5f")
+horizontal_alignment = 1
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1436733147]
+_spawnable_scenes = PackedStringArray("uid://bidm5de2a71e8")
+spawn_path = NodePath("../Multiplayer")
+
+[node name="Multiplayer" type="Node" parent="." unique_id=631617702]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1656602819]
+position = Vector2(34, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=790448261]
+position = Vector2(584, 601)
+shape = SubResource("RectangleShape2D_ons5f")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D" unique_id=1811391066]
+offset_left = -117.0
+offset_top = 585.0
+offset_right = 1347.0
+offset_bottom = 606.0
+
+[node name="SpawnPoints" type="Node" parent="." unique_id=825950453]
+
+[node name="Spawn1" type="Node2D" parent="SpawnPoints" unique_id=1398102239]
+position = Vector2(454, 168)
+
+[node name="Spawn2" type="Node2D" parent="SpawnPoints" unique_id=338016436]
+
+[node name="Spawn3" type="Node2D" parent="SpawnPoints" unique_id=125821505]
+
+[node name="Spawn4" type="Node2D" parent="SpawnPoints" unique_id=1825800058]
