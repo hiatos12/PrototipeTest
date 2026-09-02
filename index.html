@@ -2307,62 +2307,62 @@ window.NotePaint = {
 };
 
 
+
 /* ============================================================
    PLUGIN MANAGER
-============================================================ */
-
+   ============================================================ */
 
 const PluginManager = {
 
     plugins: [],
 
-
     async loadAll() {
+
+        console.log("[NotePaint] Запуск Plugin Manager...");
 
         try {
 
-            const response =
-                await fetch(
-                    "plugins/plugins.json"
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "plugins.json не найден"
-                );
-
-            }
-
-
-            const list =
-                await response.json();
-
-
-            console.log(
-                "[NotePaint] Плагинов:",
-                list.length
+            const response = await fetch(
+                "./plugins/plugins.json",
+                {
+                    cache: "no-cache"
+                }
             );
 
-
-            for (
-                const pluginPath
-                of list
-            ) {
-
-                await this.load(
-                    pluginPath
+            if (!response.ok) {
+                throw new Error(
+                    `plugins.json: HTTP ${response.status}`
                 );
+            }
+
+            const list = await response.json();
+
+            if (!Array.isArray(list)) {
+                throw new Error(
+                    "plugins.json должен содержать массив"
+                );
+            }
+
+            console.log(
+                `[NotePaint] Найдено плагинов: ${list.length}`
+            );
+
+            for (const pluginPath of list) {
+
+                await this.load(pluginPath);
 
             }
+
+            console.log(
+                "[NotePaint] Загрузка плагинов завершена."
+            );
 
         }
         catch (error) {
 
-            console.warn(
+            console.error(
                 "[NotePaint] Plugin Manager:",
-                error.message
+                error
             );
 
         }
@@ -2370,21 +2370,42 @@ const PluginManager = {
     },
 
 
-    async load(path) {
+    async load(pluginPath) {
+
+        console.log(
+            "[NotePaint] Загружаю:",
+            pluginPath
+        );
 
         try {
 
-            const response =
-                await fetch(
-                    "plugins/" + path
-                );
+            /*
+             * Нормализуем путь
+             */
+            const path =
+                pluginPath
+                    .replace(/^\/+/, "")
+                    .replace(/^plugins\//, "");
+
+            const url =
+                `./plugins/${path}`;
+
+
+            /*
+             * Загружаем HTML
+             */
+            const response = await fetch(
+                url,
+                {
+                    cache: "no-cache"
+                }
+            );
 
 
             if (!response.ok) {
 
                 throw new Error(
-                    "Не удалось загрузить " +
-                    path
+                    `HTTP ${response.status}`
                 );
 
             }
@@ -2394,11 +2415,35 @@ const PluginManager = {
                 await response.text();
 
 
+            if (!html.trim()) {
+
+                throw new Error(
+                    "Файл плагина пустой"
+                );
+
+            }
+
+
+            /*
+             * Создаём отдельный контейнер
+             */
+            const wrapper =
+                document.createElement("div");
+
+            wrapper.className =
+                "notepaint-plugin";
+
+            wrapper.dataset.plugin =
+                path;
+
+
+            /*
+             * Парсим HTML
+             */
             const parser =
                 new DOMParser();
 
-
-            const document =
+            const parsed =
                 parser.parseFromString(
                     html,
                     "text/html"
@@ -2406,78 +2451,131 @@ const PluginManager = {
 
 
             /*
-             * CSS плагина
+             * ------------------------------------------------
+             * CSS
+             * ------------------------------------------------
              */
 
-            document
-                .querySelectorAll(
-                    "style"
-                )
-                .forEach(
-                    style => {
+            parsed
+                .querySelectorAll("style")
+                .forEach(style => {
 
-                        const newStyle =
-                            document.createElement(
-                                "style"
-                            );
+                    const newStyle =
+                        document.createElement("style");
 
-                        newStyle.textContent =
-                            style.textContent;
+                    newStyle.textContent =
+                        style.textContent;
 
-                        document.head.appendChild(
-                            newStyle
-                        );
+                    newStyle.dataset.plugin =
+                        path;
 
-                    }
-                );
+                    document.head.appendChild(
+                        newStyle
+                    );
+
+                });
 
 
             /*
-             * HTML плагина
+             * ------------------------------------------------
+             * HTML
+             * ------------------------------------------------
+             *
+             * Если есть:
+             *
+             * <div id="plugin">
+             *
+             * берём его содержимое.
+             *
+             * Если нет — берём body.
              */
 
-            const container =
-                document.getElementById(
-                    "plugin"
-                );
+            const pluginRoot =
+                parsed.querySelector("#plugin")
+                || parsed.body;
 
 
-            if (container) {
+            if (
+                pluginRoot &&
+                pluginRoot.innerHTML.trim()
+            ) {
 
-                document
-                    .getElementById(
-                        "plugin-container"
-                    )
-                    .appendChild(
-                        container
-                    );
+                wrapper.innerHTML =
+                    pluginRoot.innerHTML;
 
             }
 
 
             /*
-             * JavaScript плагина
+             * Добавляем HTML в контейнер
+             */
+            const pluginContainer =
+                document.getElementById(
+                    "plugin-container"
+                );
+
+
+            if (!pluginContainer) {
+
+                throw new Error(
+                    "#plugin-container не найден"
+                );
+
+            }
+
+
+            pluginContainer.appendChild(
+                wrapper
+            );
+
+
+            /*
+             * ------------------------------------------------
+             * JAVASCRIPT
+             * ------------------------------------------------
              */
 
             const scripts =
-                document.querySelectorAll(
+                parsed.querySelectorAll(
                     "script"
                 );
 
 
-            for (
-                const oldScript
-                of scripts
-            ) {
+            for (const oldScript of scripts) {
 
                 const script =
-                    document.createElement(
-                        "script"
-                    );
+                    document.createElement("script");
 
 
-                script.textContent =
-                    oldScript.textContent;
+                /*
+                 * Если у script есть src,
+                 * загружаем внешний файл.
+                 */
+
+                if (oldScript.src) {
+
+                    script.src =
+                        new URL(
+                            oldScript.getAttribute("src"),
+                            url
+                        ).href;
+
+                }
+                else {
+
+                    script.textContent =
+                        oldScript.textContent;
+
+                }
+
+
+                /*
+                 * Помечаем, к какому плагину
+                 * относится script.
+                 */
+
+                script.dataset.plugin =
+                    path;
 
 
                 document.body.appendChild(
@@ -2487,22 +2585,25 @@ const PluginManager = {
             }
 
 
-            this.plugins.push(
-                path
-            );
+            /*
+             * Сохраняем информацию
+             */
+
+            this.plugins.push({
+                path: path,
+                url: url
+            });
 
 
             console.log(
-                "[NotePaint] Загружен:",
-                path
+                `[NotePaint] ✓ Плагин загружен: ${path}`
             );
 
         }
         catch (error) {
 
             console.error(
-                "[NotePaint] Ошибка плагина:",
-                path,
+                `[NotePaint] ✗ Ошибка плагина: ${pluginPath}`,
                 error
             );
 
@@ -2511,6 +2612,8 @@ const PluginManager = {
     }
 
 };
+
+
 
 
 PluginManager.loadAll();
