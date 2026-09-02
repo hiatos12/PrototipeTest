@@ -1,0 +1,46 @@
+<script>
+(function() {
+
+    const plugin = {
+        name: "Часы",
+        version: "1.0",
+        description: "Показывает время в NotePaint"
+    };
+
+    const clock = document.createElement("div");
+
+    clock.id = "plugin-clock";
+
+    Object.assign(clock.style, {
+        position: "fixed",
+        bottom: "15px",
+        left: "90px",
+        padding: "8px 12px",
+        background: "#202228",
+        border: "1px solid #363941",
+        borderRadius: "8px",
+        color: "#fff",
+        fontFamily: "Arial",
+        fontSize: "13px",
+        zIndex: "9999"
+    });
+
+    document.body.appendChild(clock);
+
+    function update() {
+        clock.textContent =
+            new Date().toLocaleTimeString();
+    }
+
+    update();
+
+    setInterval(update, 1000);
+
+    console.log(
+        "[NotePaint Plugin]",
+        plugin.name,
+        "loaded"
+    );
+
+})();
+</script>
