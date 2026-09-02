@@ -1,4 +1,6 @@
 [
     "clock/plugin.html",
-    "shortcuts/plugin.html"
+    "shortcuts/plugin.html",
+    "paint-dark/plugin.html",
+    "pro-tools/plugin.html"
 ]

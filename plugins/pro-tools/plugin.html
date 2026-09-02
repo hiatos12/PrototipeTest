@@ -1,0 +1,1563 @@
+<div id="plugin">
+    <div id="np-pro-tools">
+
+        <div class="np-tools-title">
+            PRO TOOLS
+        </div>
+
+        <div class="np-tools-subtitle">
+            Инструменты
+        </div>
+
+        <div class="np-tool-grid">
+
+            <button
+                class="np-tool active"
+                data-tool="pencil"
+                title="Карандаш"
+            >
+                ✎
+                <span>Карандаш</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="brush"
+                title="Кисть"
+            >
+                🖌
+                <span>Кисть</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="eraser"
+                title="Ластик"
+            >
+                ◻
+                <span>Ластик</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="line"
+                title="Линия"
+            >
+                ╱
+                <span>Линия</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="rect"
+                title="Прямоугольник"
+            >
+                □
+                <span>Прямоуг.</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="ellipse"
+                title="Эллипс"
+            >
+                ○
+                <span>Эллипс</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="fill"
+                title="Заливка"
+            >
+                ▰
+                <span>Заливка</span>
+            </button>
+
+            <button
+                class="np-tool"
+                data-tool="picker"
+                title="Пипетка"
+            >
+                ◉
+                <span>Пипетка</span>
+            </button>
+
+        </div>
+
+        <div class="np-divider"></div>
+
+        <div class="np-tool-options">
+
+            <label>
+                Размер кисти
+            </label>
+
+            <input
+                id="np-size"
+                type="range"
+                min="1"
+                max="100"
+                value="4"
+            >
+
+            <div id="np-size-value">
+                4 px
+            </div>
+
+        </div>
+
+        <div class="np-divider"></div>
+
+        <div class="np-zoom">
+
+            <div class="np-zoom-title">
+                Масштаб
+            </div>
+
+            <div class="np-zoom-row">
+
+                <button id="np-zoom-out">
+                    −
+                </button>
+
+                <span id="np-zoom-value">
+                    100%
+                </span>
+
+                <button id="np-zoom-in">
+                    +
+                </button>
+
+                <button id="np-zoom-reset">
+                    100
+                </button>
+
+            </div>
+
+            <div class="np-zoom-help">
+                CTRL + колесо мыши
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+
+/* ============================================================
+   PRO TOOLS UI
+   ============================================================ */
+
+#np-pro-tools {
+
+    position:
+        fixed;
+
+    left:
+        18px;
+
+    top:
+        120px;
+
+    width:
+        210px;
+
+    padding:
+        12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #242424,
+            #1b1b1b
+        );
+
+    border:
+        1px solid #3b3b3b;
+
+    border-radius:
+        12px;
+
+    box-shadow:
+        0 12px 30px rgba(
+            0,
+            0,
+            0,
+            0.35
+        );
+
+    color:
+        white;
+
+    z-index:
+        9000;
+
+    user-select:
+        none;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+}
+
+.np-tools-title {
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+}
+
+.np-tools-subtitle {
+
+    margin-top:
+        2px;
+
+    margin-bottom:
+        10px;
+
+    font-size:
+        11px;
+
+    color:
+        #999;
+
+}
+
+.np-tool-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:
+        6px;
+
+}
+
+.np-tool {
+
+    height:
+        58px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    gap:
+        3px;
+
+    border:
+        1px solid #3a3a3a;
+
+    border-radius:
+        8px;
+
+    background:
+        #292929;
+
+    color:
+        #ddd;
+
+    cursor:
+        pointer;
+
+    font-size:
+        20px;
+
+}
+
+.np-tool span {
+
+    font-size:
+        10px;
+
+    color:
+        #aaa;
+
+}
+
+.np-tool:hover {
+
+    background:
+        #353535;
+
+}
+
+.np-tool.active {
+
+    background:
+        #414141;
+
+    border-color:
+        #66aaff;
+
+    box-shadow:
+        inset 0 0 10px
+        rgba(
+            102,
+            170,
+            255,
+            0.08
+        );
+
+}
+
+.np-divider {
+
+    height:
+        1px;
+
+    background:
+        #363636;
+
+    margin:
+        12px 0;
+
+}
+
+.np-tool-options label {
+
+    display:
+        block;
+
+    margin-bottom:
+        6px;
+
+    color:
+        #aaa;
+
+    font-size:
+        11px;
+
+}
+
+#np-size {
+
+    width:
+        100%;
+
+}
+
+#np-size-value {
+
+    margin-top:
+        4px;
+
+    font-size:
+        11px;
+
+    color:
+        #aaa;
+
+}
+
+.np-zoom-title {
+
+    font-size:
+        11px;
+
+    color:
+        #aaa;
+
+    margin-bottom:
+        7px;
+
+}
+
+.np-zoom-row {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        32px 1fr 32px;
+
+    gap:
+        5px;
+
+}
+
+.np-zoom-row button {
+
+    height:
+        30px;
+
+    border:
+        1px solid #444;
+
+    border-radius:
+        6px;
+
+    background:
+        #2c2c2c;
+
+    color:
+        #fff;
+
+    cursor:
+        pointer;
+
+}
+
+#np-zoom-reset {
+
+    grid-column:
+        1 / -1;
+
+}
+
+#np-zoom-value {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        12px;
+
+}
+
+.np-zoom-help {
+
+    margin-top:
+        8px;
+
+    color:
+        #777;
+
+    font-size:
+        10px;
+
+    text-align:
+        center;
+
+}
+
+/* Контейнер зума */
+
+#np-zoom-viewport {
+
+    transform-origin:
+        0 0;
+
+}
+
+</style>
+
+<script>
+(() => {
+
+    /*
+     * ==========================================================
+     * NOTEPAINT PRO TOOLS
+     * ==========================================================
+     */
+
+    const api = window.NotePaint;
+
+    if (!api) {
+
+        console.error(
+            "[Pro Tools] NotePaint API не найдена"
+        );
+
+        return;
+
+    }
+
+
+    const canvas =
+        api.canvas.getCanvas();
+
+    const ctx =
+        api.canvas.getContext();
+
+
+    if (!canvas || !ctx) {
+
+        console.error(
+            "[Pro Tools] Canvas не найден"
+        );
+
+        return;
+
+    }
+
+
+    const root =
+        document.getElementById(
+            "np-pro-tools"
+        );
+
+
+    const buttons =
+        root.querySelectorAll(
+            ".np-tool"
+        );
+
+
+    const sizeInput =
+        document.getElementById(
+            "np-size"
+        );
+
+
+    const sizeValue =
+        document.getElementById(
+            "np-size-value"
+        );
+
+
+    const zoomIn =
+        document.getElementById(
+            "np-zoom-in"
+        );
+
+
+    const zoomOut =
+        document.getElementById(
+            "np-zoom-out"
+        );
+
+
+    const zoomReset =
+        document.getElementById(
+            "np-zoom-reset"
+        );
+
+
+    const zoomValue =
+        document.getElementById(
+            "np-zoom-value"
+        );
+
+
+    /*
+     * ----------------------------------------------------------
+     * СОСТОЯНИЕ
+     * ----------------------------------------------------------
+     */
+
+    let currentTool =
+        "pencil";
+
+    let drawing =
+        false;
+
+    let startX =
+        0;
+
+    let startY =
+        0;
+
+    let lastX =
+        0;
+
+    let lastY =
+        0;
+
+    let snapshot =
+        null;
+
+    let brushSize =
+        4;
+
+
+    /*
+     * ----------------------------------------------------------
+     * ВЫБОР ИНСТРУМЕНТА
+     * ----------------------------------------------------------
+     */
+
+    function selectTool(name) {
+
+        currentTool =
+            name;
+
+        buttons.forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.tool === name
+                );
+
+            }
+        );
+
+        /*
+         * Если основной NotePaint знает
+         * такой инструмент — переключаем и его.
+         */
+
+        try {
+
+            api.tools.select(
+                name
+            );
+
+        }
+        catch (_) {
+            // Игнорируем,
+            // если инструмент отсутствует.
+        }
+
+    }
+
+
+    buttons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    selectTool(
+                        button.dataset.tool
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * РАЗМЕР
+     * ----------------------------------------------------------
+     */
+
+    sizeInput.addEventListener(
+        "input",
+        () => {
+
+            brushSize =
+                Number(
+                    sizeInput.value
+                );
+
+            sizeValue.textContent =
+                `${brushSize} px`;
+
+            try {
+
+                api.brush.setSize(
+                    brushSize
+                );
+
+            }
+            catch (_) {}
+
+        }
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * КООРДИНАТЫ CANVAS
+     * ----------------------------------------------------------
+     */
+
+    function getPosition(event) {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        return {
+
+            x:
+                (
+                    event.clientX
+                    - rect.left
+                )
+                *
+                (
+                    canvas.width
+                    /
+                    rect.width
+                ),
+
+            y:
+                (
+                    event.clientY
+                    - rect.top
+                )
+                *
+                (
+                    canvas.height
+                    /
+                    rect.height
+                )
+
+        };
+
+    }
+
+
+    /*
+     * ----------------------------------------------------------
+     * SNAPSHOT
+     * ----------------------------------------------------------
+     */
+
+    function makeSnapshot() {
+
+        snapshot =
+            ctx.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+    }
+
+
+    function restoreSnapshot() {
+
+        if (!snapshot)
+            return;
+
+        ctx.putImageData(
+            snapshot,
+            0,
+            0
+        );
+
+    }
+
+
+    /*
+     * ----------------------------------------------------------
+     * ЦВЕТ
+     * ----------------------------------------------------------
+     */
+
+    function getColor() {
+
+        try {
+
+            return api.brush.getColor();
+
+        }
+        catch (_) {
+
+            return "#000000";
+
+        }
+
+    }
+
+
+    /*
+     * ----------------------------------------------------------
+     * СТИЛИ РИСОВАНИЯ
+     * ----------------------------------------------------------
+     */
+
+    function beginStroke() {
+
+        ctx.beginPath();
+
+        ctx.lineCap =
+            "round";
+
+        ctx.lineJoin =
+            "round";
+
+        ctx.lineWidth =
+            brushSize;
+
+        ctx.strokeStyle =
+            getColor();
+
+        ctx.fillStyle =
+            getColor();
+
+    }
+
+
+    /*
+     * ----------------------------------------------------------
+     * DRAW
+     * ----------------------------------------------------------
+     */
+
+    function drawFreehand(
+        x,
+        y
+    ) {
+
+        ctx.lineTo(
+            x,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    function drawLine(
+        x1,
+        y1,
+        x2,
+        y2
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x1,
+            y1
+        );
+
+        ctx.lineTo(
+            x2,
+            y2
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    function drawRect(
+        x1,
+        y1,
+        x2,
+        y2
+    ) {
+
+        const width =
+            x2 - x1;
+
+        const height =
+            y2 - y1;
+
+        ctx.strokeRect(
+            x1,
+            y1,
+            width,
+            height
+        );
+
+    }
+
+
+    function drawEllipse(
+        x1,
+        y1,
+        x2,
+        y2
+    ) {
+
+        const cx =
+            (x1 + x2) / 2;
+
+        const cy =
+            (y1 + y2) / 2;
+
+        const rx =
+            Math.abs(
+                x2 - x1
+            ) / 2;
+
+        const ry =
+            Math.abs(
+                y2 - y1
+            ) / 2;
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            cx,
+            cy,
+            rx,
+            ry,
+            0,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /*
+     * ----------------------------------------------------------
+     * POINTER DOWN
+     * ----------------------------------------------------------
+     */
+
+    canvas.addEventListener(
+        "pointerdown",
+        event => {
+
+            /*
+             * Для инструментов,
+             * которые принадлежат этому плагину.
+             */
+
+            const custom =
+                [
+                    "pencil",
+                    "brush",
+                    "eraser",
+                    "line",
+                    "rect",
+                    "ellipse",
+                    "picker"
+                ];
+
+            if (
+                !custom.includes(
+                    currentTool
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const pos =
+                getPosition(
+                    event
+                );
+
+
+            drawing =
+                true;
+
+
+            startX =
+                pos.x;
+
+            startY =
+                pos.y;
+
+            lastX =
+                pos.x;
+
+            lastY =
+                pos.y;
+
+
+            makeSnapshot();
+
+
+            beginStroke();
+
+
+            if (
+                currentTool ===
+                "pencil"
+                ||
+                currentTool ===
+                "brush"
+            ) {
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    pos.x,
+                    pos.y
+                );
+
+                ctx.stroke();
+
+            }
+
+
+            canvas.setPointerCapture(
+                event.pointerId
+            );
+
+            event.preventDefault();
+
+        },
+        true
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * POINTER MOVE
+     * ----------------------------------------------------------
+     */
+
+    canvas.addEventListener(
+        "pointermove",
+        event => {
+
+            if (!drawing)
+                return;
+
+
+            const pos =
+                getPosition(
+                    event
+                );
+
+
+            /*
+             * Карандаш / кисть
+             */
+
+            if (
+                currentTool ===
+                "pencil"
+                ||
+                currentTool ===
+                "brush"
+            ) {
+
+                drawFreehand(
+                    pos.x,
+                    pos.y
+                );
+
+            }
+
+
+            /*
+             * Ластик
+             */
+
+            if (
+                currentTool ===
+                "eraser"
+            ) {
+
+                ctx.save();
+
+                ctx.globalCompositeOperation =
+                    "destination-out";
+
+                ctx.lineWidth =
+                    brushSize * 2;
+
+                ctx.lineCap =
+                    "round";
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    lastX,
+                    lastY
+                );
+
+                ctx.lineTo(
+                    pos.x,
+                    pos.y
+                );
+
+                ctx.stroke();
+
+                ctx.restore();
+
+            }
+
+
+            /*
+             * Фигуры
+             */
+
+            if (
+                currentTool ===
+                "line"
+                ||
+                currentTool ===
+                "rect"
+                ||
+                currentTool ===
+                "ellipse"
+            ) {
+
+                restoreSnapshot();
+
+                beginStroke();
+
+
+                if (
+                    currentTool ===
+                    "line"
+                ) {
+
+                    drawLine(
+                        startX,
+                        startY,
+                        pos.x,
+                        pos.y
+                    );
+
+                }
+
+
+                if (
+                    currentTool ===
+                    "rect"
+                ) {
+
+                    drawRect(
+                        startX,
+                        startY,
+                        pos.x,
+                        pos.y
+                    );
+
+                }
+
+
+                if (
+                    currentTool ===
+                    "ellipse"
+                ) {
+
+                    drawEllipse(
+                        startX,
+                        startY,
+                        pos.x,
+                        pos.y
+                    );
+
+                }
+
+            }
+
+
+            lastX =
+                pos.x;
+
+            lastY =
+                pos.y;
+
+            event.preventDefault();
+
+        },
+        true
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * POINTER UP
+     * ----------------------------------------------------------
+     */
+
+    canvas.addEventListener(
+        "pointerup",
+        event => {
+
+            if (!drawing)
+                return;
+
+
+            drawing =
+                false;
+
+
+            /*
+             * Ожидаем API основного редактора
+             */
+
+            try {
+
+                api.canvas.saveState();
+
+            }
+            catch (_) {}
+
+
+            try {
+
+                api.storage.save();
+
+            }
+            catch (_) {}
+
+
+            try {
+
+                canvas.releasePointerCapture(
+                    event.pointerId
+                );
+
+            }
+            catch (_) {}
+
+
+            event.preventDefault();
+
+        },
+        true
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * ПИПЕТКА
+     * ----------------------------------------------------------
+     */
+
+    canvas.addEventListener(
+        "pointerdown",
+        event => {
+
+            if (
+                currentTool !==
+                "picker"
+            ) {
+
+                return;
+
+            }
+
+
+            const pos =
+                getPosition(
+                    event
+                );
+
+
+            const pixel =
+                ctx.getImageData(
+                    Math.floor(pos.x),
+                    Math.floor(pos.y),
+                    1,
+                    1
+                ).data;
+
+
+            const color =
+                "#" +
+                pixel[0]
+                    .toString(16)
+                    .padStart(2, "0")
+                +
+                pixel[1]
+                    .toString(16)
+                    .padStart(2, "0")
+                +
+                pixel[2]
+                    .toString(16)
+                    .padStart(2, "0");
+
+
+            try {
+
+                api.brush.setColor(
+                    color
+                );
+
+            }
+            catch (_) {}
+
+
+            selectTool(
+                "pencil"
+            );
+
+            event.preventDefault();
+
+        },
+        true
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * ZOOM
+     * CTRL + КОЛЕСО
+     * ----------------------------------------------------------
+     */
+
+    let zoom =
+        1;
+
+
+    /*
+     * Создаём viewport вокруг canvas.
+     */
+
+    let viewport =
+        document.getElementById(
+            "np-zoom-viewport"
+        );
+
+
+    if (!viewport) {
+
+        viewport =
+            document.createElement(
+                "div"
+            );
+
+        viewport.id =
+            "np-zoom-viewport";
+
+
+        const parent =
+            canvas.parentElement;
+
+
+        if (parent) {
+
+            parent.insertBefore(
+                viewport,
+                canvas
+            );
+
+            viewport.appendChild(
+                canvas
+            );
+
+            viewport.style.display =
+                "inline-block";
+
+        }
+
+    }
+
+
+    function updateZoom() {
+
+        zoomValue.textContent =
+            `${Math.round(zoom * 100)}%`;
+
+
+        viewport.style.transform =
+            `scale(${zoom})`;
+
+    }
+
+
+    function setZoom(
+        value
+    ) {
+
+        zoom =
+            Math.max(
+                0.25,
+                Math.min(
+                    4,
+                    value
+                )
+            );
+
+
+        updateZoom();
+
+    }
+
+
+    zoomIn.addEventListener(
+        "click",
+        () => {
+
+            setZoom(
+                zoom + 0.25
+            );
+
+        }
+    );
+
+
+    zoomOut.addEventListener(
+        "click",
+        () => {
+
+            setZoom(
+                zoom - 0.25
+            );
+
+        }
+    );
+
+
+    zoomReset.addEventListener(
+        "click",
+        () => {
+
+            setZoom(
+                1
+            );
+
+        }
+    );
+
+
+    /*
+     * Главная фича:
+     * CTRL + колесо мыши
+     */
+
+    document.addEventListener(
+        "wheel",
+        event => {
+
+            if (
+                !event.ctrlKey
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+             * Проверяем,
+             * что курсор находится
+             * над canvas.
+             */
+
+            const rect =
+                canvas.getBoundingClientRect();
+
+
+            const inside =
+                event.clientX >= rect.left &&
+                event.clientX <= rect.right &&
+                event.clientY >= rect.top &&
+                event.clientY <= rect.bottom;
+
+
+            if (!inside)
+                return;
+
+
+            event.preventDefault();
+
+
+            const delta =
+                event.deltaY < 0
+                    ? 0.1
+                    : -0.1;
+
+
+            setZoom(
+                zoom + delta
+            );
+
+        },
+        {
+            passive: false
+        }
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * ГОРЯЧИЕ КЛАВИШИ
+     * ----------------------------------------------------------
+     */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            /*
+             * Не перехватываем ввод текста.
+             */
+
+            const target =
+                event.target;
+
+            if (
+                target.tagName ===
+                "INPUT"
+                ||
+                target.tagName ===
+                "TEXTAREA"
+            ) {
+
+                return;
+
+            }
+
+
+            switch (
+                event.key.toLowerCase()
+            ) {
+
+                case "p":
+                    selectTool("pencil");
+                    break;
+
+                case "b":
+                    selectTool("brush");
+                    break;
+
+                case "e":
+                    selectTool("eraser");
+                    break;
+
+                case "l":
+                    selectTool("line");
+                    break;
+
+                case "r":
+                    selectTool("rect");
+                    break;
+
+                case "o":
+                    selectTool("ellipse");
+                    break;
+
+                case "i":
+                    selectTool("picker");
+                    break;
+
+            }
+
+        }
+    );
+
+
+    /*
+     * ----------------------------------------------------------
+     * СТАРТ
+     * ----------------------------------------------------------
+     */
+
+    selectTool(
+        "pencil"
+    );
+
+    updateZoom();
+
+
+    console.log(
+        "[Pro Tools] ✓ Инструменты загружены"
+    );
+
+})();
+</script>
