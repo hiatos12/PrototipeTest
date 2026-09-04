@@ -1,0 +1,972 @@
+/* universal sign  */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  /* font-family: gilroy; */
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+}
+
+@font-face {
+  font-family: "Gravitica Mono";
+  src: url("../assets/Fonts/ckhans-fonts-gravitica-mono-light-demo.otf") format("opentype");
+}
+body {
+  overflow: hidden;
+}
+body .Boot_section {
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  background: #1c1c1c;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20%;
+  justify-content: space-evenly;
+}
+body .Boot_section img {
+  margin-top: 10%;
+  width: 200px;
+  margin-bottom: 5px;
+}
+body .Boot_section .bottem_bottom {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+body .Boot_section .bottem_bottom .loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #444;
+  border-bottom-color: white;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+body .Boot_section .bottem_bottom .main_logo_text {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10px;
+}
+body .Boot_section .bottem_bottom .main_logo_text .logo {
+  width: 60px;
+  height: 130px;
+  background: #d74715;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+body .Boot_section .bottem_bottom .main_logo_text .logo img {
+  width: 50px;
+}
+body .Boot_section .bottem_bottom .main_logo_text p {
+  font-size: 60px;
+  font-weight: 700;
+  font-family: "Gravitica Mono", "Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS", sans-serif;
+}
+body .Home_Screen {
+  width: 100vw;
+  height: 100vh;
+  background: url("../assets/Img/Wallpaper.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+body .Home_Screen .Top_Bar {
+  width: 100%;
+  height: 3%;
+  color: white;
+  background: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+body .Home_Screen .Top_Bar .Top_Center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 5px 15px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+body .Home_Screen .Top_Bar .Top_Center:hover {
+  background: rgb(63, 63, 63);
+}
+body .Home_Screen .Top_Bar .Top_Center span {
+  font-size: 14px;
+}
+body .Home_Screen .Top_Bar .Top_right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 15px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+body .Home_Screen .Top_Bar .Top_right:hover {
+  background: rgb(63, 63, 63);
+}
+body .Home_Screen .Top_Bar .Top_right p {
+  font-size: 14px;
+}
+body .Home_Screen .mid_Section {
+  width: 100%;
+  height: 97%;
+  display: flex;
+}
+body .Home_Screen .mid_Section .Dock {
+  width: 80px;
+  height: 100%;
+  padding: 0 3px;
+  color: white;
+  background: black;
+  border-top: 1px groove rgb(40, 35, 70);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Dock .Dock_up .desktop_App {
+  border-radius: 10px;
+  margin: 10px 0;
+}
+body .Home_Screen .mid_Section .Dock .Dock_up .desktop_App:hover {
+  background: #b9b7b5;
+}
+body .Home_Screen .mid_Section .Dock .Dock_up .desktop_App img {
+  width: 100%;
+  margin: 10px 0;
+  padding: 0 5px;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Dock .Dock_Down .desktop_App {
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Dock .Dock_Down .desktop_App:hover {
+  background: #b9b7b5;
+}
+body .Home_Screen .mid_Section .Dock .Dock_Down .desktop_App i {
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  width: 100%;
+  font-size: 50px;
+  border-radius: 10px;
+  padding: 5px 0;
+  margin: 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .Home_Screen .mid_Section .Main_Area {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  position: relative;
+}
+body .Home_Screen .mid_Section .Main_Area .system_manu_section {
+  left: 0%;
+  bottom: 0%;
+  padding: 10px;
+  position: absolute;
+  border-radius: 10px;
+  background: #4b5857;
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .system_manu_section .desktop_App {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  padding: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+body .Home_Screen .mid_Section .Main_Area .system_manu_section .desktop_App:hover {
+  color: black;
+  background: #d4d3d2;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .system_manu_section .desktop_App img {
+  margin: 10px;
+  width: 60px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .system_manu_section .desktop_App p {
+  font-weight: 500;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .shoercut_list {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  color: #c3bebe;
+}
+body .Home_Screen .mid_Section .Main_Area .shoercut_list:hover {
+  color: white;
+}
+body .Home_Screen .mid_Section .Main_Area .Desktop_apps {
+  gap: 15px;
+  padding: 0 10px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+}
+body .Home_Screen .mid_Section .Main_Area .Desktop_apps .desktop_App {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  padding: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+body .Home_Screen .mid_Section .Main_Area .Desktop_apps .desktop_App:hover {
+  color: black;
+  background: #d4d3d2;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .Desktop_apps .desktop_App img {
+  margin: 10px;
+  width: 60px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .Desktop_apps .desktop_App p {
+  font-weight: 500;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view {
+  width: 700px;
+  height: 550px;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 22%;
+  left: 0%;
+  font-size: 20px;
+  color: black;
+  background: white;
+  border-radius: 10px;
+  border: 2px solid black;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder {
+  color: white;
+  background: black;
+  padding: 3px 10px;
+  border-radius: 7px 7px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .folder_haeder_left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .folder_haeder_left img {
+  width: 32px;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .btn {
+  border: 0;
+  padding: 4px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .folder_minimize_button {
+  color: white;
+  background: #1aaf03;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .folder_minimize_button:hover {
+  background: #23ff01;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .folder_Maximize_button {
+  color: white;
+  background: #0548bd;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .folder_Maximize_button:hover {
+  background: #00a2ff;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .folder_Close_button {
+  color: white;
+  background: #be0606;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder .header_button .folder_Close_button:hover {
+  background: #ff3131;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder_Manu {
+  background: #a29bf9;
+  padding: 10px 5px;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder_Manu .btn_folder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder_Manu .btn_folder .btn {
+  border: 0;
+  padding: 10px 20px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  background: white;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder_Manu .btn_folder .btn:hover {
+  background: navy;
+  color: white;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_haeder_Manu .folder_path {
+  padding: 7px 15px;
+  background: rgb(175, 220, 238);
+  font-weight: 600;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section {
+  width: 97%;
+  height: 100%;
+  margin: 10px;
+  overflow: scroll;
+  border: 2px solid #809796;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section .folder_main_section_inner {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 5px;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section .folder_main_section_inner .folder_main_section_inner_folders {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 5px 0;
+  font-weight: 600;
+  border-bottom: 2px solid rgb(199, 198, 198);
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section .folder_main_section_inner .folder_main_section_inner_folders:hover {
+  background: #e3e3fe;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section .folder_main_section_inner .folder_main_section_inner_folders img,
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section .folder_main_section_inner .folder_main_section_inner_folders p {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .folder_view .folder_main_section .folder_main_section_inner .folder_main_section_inner_folders img {
+  width: 50px;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view {
+  width: 700px;
+  height: 550px;
+  min-width: 650px;
+  min-height: 488px;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 22%;
+  left: 7%;
+  font-size: 20px;
+  color: black;
+  background: white;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder {
+  color: white;
+  background: black;
+  padding: 3px 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .terminal_haeder_left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .terminal_haeder_left img {
+  width: 32px;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .btn {
+  border: 0;
+  padding: 4px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .terminal_minimize_button {
+  color: white;
+  background: #1aaf03;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .terminal_minimize_button:hover {
+  background: #23ff01;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .terminal_Maximize_button {
+  color: white;
+  background: #0548bd;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .terminal_Maximize_button:hover {
+  background: #00a2ff;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .terminal_Close_button {
+  color: white;
+  background: #be0606;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_haeder .header_button .terminal_Close_button:hover {
+  background: #ff3131;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: #1c1c1c;
+  overflow: hidden;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main .terminal_innerpart {
+  width: 100%;
+  height: 99%;
+  color: #23ff01;
+  border-radius: 10px;
+  border: 2px solid white;
+  padding: 20px;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main .terminal_innerpart p,
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main .terminal_innerpart span,
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main .terminal_innerpart textarea {
+  font-family: "Courier New", Courier, monospace;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main .terminal_innerpart div {
+  height: 91%;
+  width: 100%;
+  margin-top: 5px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5px;
+}
+body .Home_Screen .mid_Section .Main_Area .terminal_view .terminal_main .terminal_innerpart div textarea {
+  display: inline;
+  height: 100%;
+  width: 84%;
+  color: #23ff01;
+  background: #1c1c1c;
+  border: 0;
+  outline: 0;
+  resize: none;
+  font-size: 22px;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view {
+  width: 700px;
+  height: 550px;
+  display: none;
+  flex-direction: column;
+  border: 2px solid black;
+  position: absolute;
+  top: 22%;
+  left: 14%;
+  font-size: 20px;
+  color: black;
+  background: white;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder {
+  color: white;
+  background: black;
+  padding: 3px 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .text_editor_haeder_left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .text_editor_haeder_left img {
+  width: 32px;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .btn {
+  border: 0;
+  padding: 4px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .text_editor_minimize_button {
+  color: white;
+  background: #1aaf03;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .text_editor_minimize_button:hover {
+  background: #23ff01;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .text_editor_Maximize_button {
+  color: white;
+  background: #0548bd;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .text_editor_Maximize_button:hover {
+  background: #00a2ff;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .text_editor_Close_button {
+  color: white;
+  background: #be0606;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder .header_button .text_editor_Close_button:hover {
+  background: #ff3131;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder_Manu {
+  background: #a29bf9;
+  padding: 10px 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder_Manu .btn {
+  border: 0;
+  padding: 10px 20px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  background: white;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_haeder_Manu .btn:hover {
+  background: navy;
+  color: white;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_main {
+  width: 100%;
+  height: 100%;
+}
+body .Home_Screen .mid_Section .Main_Area .text_editor_view .text_editor_main textarea {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  outline: 0;
+  resize: none;
+  font-size: 22px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view {
+  width: 700px;
+  height: 550px;
+  display: none;
+  flex-direction: column;
+  border: 2px solid black;
+  position: absolute;
+  top: 22%;
+  left: 21%;
+  font-size: 20px;
+  color: black;
+  background: white;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder {
+  color: white;
+  background: black;
+  padding: 3px 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .Music_player_haeder_left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .Music_player_haeder_left img {
+  width: 32px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .btn {
+  border: 0;
+  padding: 4px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .btn i {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .Music_player_minimize_button {
+  color: white;
+  background: #1aaf03;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .Music_player_minimize_button:hover {
+  background: #23ff01;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .Music_player_Maximize_button {
+  color: white;
+  background: #0548bd;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .Music_player_Maximize_button:hover {
+  background: #00a2ff;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .Music_player_Close_button {
+  color: white;
+  background: #be0606;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder .header_button .Music_player_Close_button:hover {
+  background: #ff3131;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder_Manu {
+  gap: 10px;
+  display: flex;
+  padding: 12px 5px;
+  align-items: center;
+  border-bottom: 2px solid rgb(200, 189, 189);
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_haeder_Manu h2 {
+  margin: 10px 20px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_center {
+  width: 100%;
+  height: 100%;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_center img {
+  margin-top: 5px;
+  height: 150px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_bottom {
+  width: 100%;
+  padding: 10px 50px;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_bottom input {
+  width: 100%;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_bottom .btn {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_bottom .btn button {
+  border: 0;
+  padding: 5px;
+  border-radius: 50%;
+  color: white;
+  background: blue;
+}
+body .Home_Screen .mid_Section .Main_Area .Music_player_view .Music_player_Main .Music_player_Main_bottom .btn button i {
+  font-size: 35px;
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view {
+  width: 650px;
+  height: 493px;
+  display: none;
+  flex-direction: column;
+  border: 2px solid black;
+  position: absolute;
+  top: 22%;
+  left: 28%;
+  font-size: 20px;
+  color: black;
+  background: white;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder {
+  color: white;
+  background: black;
+  padding: 3px 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .Video_player_haeder_left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .Video_player_haeder_left img {
+  width: 32px;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .btn {
+  border: 0;
+  padding: 4px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .btn i {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .Video_player_minimize_button {
+  color: white;
+  background: #1aaf03;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .Video_player_minimize_button:hover {
+  background: #23ff01;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .Video_player_Maximize_button {
+  color: white;
+  background: #0548bd;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .Video_player_Maximize_button:hover {
+  background: #00a2ff;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .Video_player_Close_button {
+  color: white;
+  background: #be0606;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_haeder .header_button .Video_player_Close_button:hover {
+  background: #ff3131;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_center {
+  width: 100%;
+  height: 100%;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_center video {
+  width: 100%;
+  width: 100%;
+  padding: 3px;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_bottom {
+  width: 100%;
+  padding: 5px 50px;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_bottom input {
+  width: 100%;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_bottom .btn {
+  width: 100%;
+  margin-top: 7px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_bottom .btn button {
+  border: 0;
+  padding: 3px;
+  border-radius: 50%;
+  color: white;
+  background: blue;
+}
+body .Home_Screen .mid_Section .Main_Area .Video_player_view .Video_player_Main .Video_player_Main_bottom .btn button i {
+  font-size: 30px;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view {
+  width: 600px;
+  height: 300px;
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 22%;
+  left: 7%;
+  font-size: 20px;
+  border: 2px solid black;
+  color: black;
+  background: white;
+  border-radius: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder {
+  color: white;
+  background: black;
+  padding: 3px 10px;
+  border-radius: 10px 10px 0 0;
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .setting_haeder_left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .setting_haeder_left img {
+  width: 32px;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .setting_haeder_left p {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .btn {
+  border: 0;
+  padding: 4px;
+  margin: 5px 3px;
+  outline: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .setting_minimize_button {
+  color: white;
+  background: #1aaf03;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .setting_minimize_button:hover {
+  background: #23ff01;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .setting_Maximize_button {
+  color: white;
+  background: #0548bd;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .setting_Maximize_button:hover {
+  background: #00a2ff;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .setting_Close_button {
+  color: white;
+  background: #be0606;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_haeder .header_button .setting_Close_button:hover {
+  background: #ff3131;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main .setting_up p {
+  font-weight: 400;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main .setting_up p span {
+  font-weight: 600;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main .setting_down {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main .setting_down button {
+  width: -moz-max-content;
+  width: max-content;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 30px;
+  font-size: 20px;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main .setting_down .off {
+  background: red;
+  color: white;
+}
+body .Home_Screen .mid_Section .Main_Area .setting_view .setting_main .setting_down .reset {
+  background: blue;
+  color: white;
+}
+
+@media (min-width: 1440px) {
+  body .Home_Screen .mid_Section .Main_Area .shoercut_list {
+    font-size: 20px;
+  }
+  body .Home_Screen .mid_Section .Main_Area .Desktop_apps .desktop_App img {
+    width: 70px;
+  }
+  body .Home_Screen .mid_Section .Main_Area .Desktop_apps .desktop_App p {
+    font-size: 20px;
+  }
+}/*# sourceMappingURL=style.css.map */

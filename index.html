@@ -1,2651 +1,458 @@
 <!DOCTYPE html>
-
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>NotePaint</title>
-
-<style>
-
-* {
-    box-sizing: border-box;
-}
-
-:root {
-    --bg: #17181c;
-    --panel: #202228;
-    --panel2: #292b32;
-    --border: #363941;
-
-    --text: #f1f1f3;
-    --muted: #9699a3;
-
-    --accent: #7c6cff;
-    --accent2: #9387ff;
-}
-
-body {
-    margin: 0;
-    height: 100vh;
-    overflow: hidden;
-
-    font-family:
-        Inter,
-        Arial,
-        sans-serif;
-
-    background: var(--bg);
-    color: var(--text);
-}
-
-button,
-input,
-textarea {
-    font-family: inherit;
-}
-
-.app {
-    height: 100vh;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header {
-    height: 58px;
-
-    display: flex;
-    align-items: center;
-
-    padding: 0 18px;
-    gap: 16px;
-
-    background: var(--panel);
-
-    border-bottom:
-        1px solid var(--border);
-
-    flex-shrink: 0;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-
-    gap: 10px;
-
-    font-size: 18px;
-    font-weight: 700;
-
-    min-width: 150px;
-}
-
-.logo-icon {
-    width: 32px;
-    height: 32px;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 9px;
-
-    background: var(--accent);
-
-    color: white;
-
-    font-size: 17px;
-}
-
-.title-input {
-    flex: 1;
-
-    max-width: 500px;
-
-    background: transparent;
-
-    border: none;
-    outline: none;
-
-    color: var(--text);
-
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.title-input::placeholder {
-    color: #777a84;
-}
-
-.save-status {
-    margin-left: auto;
-
-    color: var(--muted);
-
-    font-size: 13px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 7px;
-
-    white-space: nowrap;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: #58d68d;
-
-    box-shadow:
-        0 0 8px rgba(88,214,141,.5);
-}
-
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main {
-    flex: 1;
-
-    display: flex;
-
-    min-height: 0;
-}
-
-
-/* =========================================================
-   LEFT TOOLBAR
-========================================================= */
-
-.toolbar {
-    width: 74px;
-
-    background: var(--panel);
-
-    border-right:
-        1px solid var(--border);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    padding: 12px 9px;
-
-    gap: 7px;
-
-    flex-shrink: 0;
-}
-
-.tool {
-    width: 50px;
-    height: 50px;
-
-    border:
-        1px solid transparent;
-
-    background: transparent;
-
-    color: #b8bac2;
-
-    border-radius: 12px;
-
-    cursor: pointer;
-
-    font-size: 20px;
-
-    transition: .15s;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tool:hover {
-    background: var(--panel2);
-
-    color: white;
-}
-
-.tool.active {
-    background:
-        rgba(124,108,255,.18);
-
-    color: var(--accent2);
-
-    border-color:
-        rgba(124,108,255,.3);
-}
-
-.separator {
-    width: 42px;
-    height: 1px;
-
-    background: var(--border);
-
-    margin: 5px 0;
-}
-
-.tool-bottom {
-    margin-top: auto;
-}
-
-
-/* =========================================================
-   WORKSPACE
-========================================================= */
-
-.workspace {
-    flex: 1;
-
-    min-width: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    background: #111216;
-}
-
-.paint-toolbar {
-    height: 58px;
-
-    background: var(--panel);
-
-    border-bottom:
-        1px solid var(--border);
-
-    display: flex;
-    align-items: center;
-
-    padding: 0 14px;
-
-    gap: 12px;
-
-    flex-shrink: 0;
-}
-
-.group {
-    display: flex;
-    align-items: center;
-
-    gap: 7px;
-
-    padding-right: 12px;
-
-    border-right:
-        1px solid var(--border);
-}
-
-.group:last-child {
-    border: none;
-}
-
-.mini-btn {
-    height: 36px;
-
-    min-width: 36px;
-
-    padding: 0 10px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 9px;
-
-    background: var(--panel2);
-
-    color: #d5d6dc;
-
-    cursor: pointer;
-
-    font-size: 14px;
-}
-
-.mini-btn:hover {
-    background: #333640;
-}
-
-.color {
-    width: 30px;
-    height: 30px;
-
-    border-radius: 50%;
-
-    border:
-        2px solid #555861;
-
-    cursor: pointer;
-
-    overflow: hidden;
-}
-
-.color input {
-    opacity: 0;
-
-    width: 100%;
-    height: 100%;
-
-    cursor: pointer;
-}
-
-.size-label {
-    color: var(--muted);
-
-    font-size: 12px;
-
-    white-space: nowrap;
-}
-
-#size {
-    width: 100px;
-
-    accent-color:
-        var(--accent);
-}
-
-.canvas-area {
-    flex: 1;
-
-    min-height: 0;
-
-    position: relative;
-
-    overflow: auto;
-
-    padding: 28px;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: flex-start;
-
-    background:
-        radial-gradient(
-            circle at 1px 1px,
-            #25272d 1px,
-            transparent 1px
-        );
-
-    background-size: 22px 22px;
-}
-
-.canvas-wrapper {
-    position: relative;
-
-    background: white;
-
-    box-shadow:
-        0 12px 45px rgba(0,0,0,.35);
-
-    border-radius: 3px;
-
-    overflow: hidden;
-
-    flex-shrink: 0;
-}
-
-canvas {
-    display: block;
-
-    background: white;
-
-    cursor: crosshair;
-}
-
-
-/* =========================================================
-   NOTES
-========================================================= */
-
-.notes {
-    width: 340px;
-
-    background: var(--panel);
-
-    border-left:
-        1px solid var(--border);
-
-    display: flex;
-
-    flex-direction: column;
-
-    flex-shrink: 0;
-}
-
-.notes-header {
-    height: 58px;
-
-    display: flex;
-    align-items: center;
-
-    padding: 0 16px;
-
-    border-bottom:
-        1px solid var(--border);
-
-    font-weight: 700;
-}
-
-.notes-header span {
-    color: var(--muted);
-
-    font-size: 12px;
-
-    margin-left: auto;
-
-    font-weight: 400;
-}
-
-textarea {
-    flex: 1;
-
-    width: 100%;
-
-    resize: none;
-
-    border: none;
-
-    outline: none;
-
-    background: #1c1d22;
-
-    color: #e8e8eb;
-
-    padding: 20px;
-
-    font-size: 15px;
-
-    line-height: 1.7;
-}
-
-textarea::placeholder {
-    color: #666973;
-}
-
-.notes-footer {
-    padding: 11px 15px;
-
-    border-top:
-        1px solid var(--border);
-
-    color: var(--muted);
-
-    font-size: 11px;
-
-    display: flex;
-
-    justify-content: space-between;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal {
-    position: fixed;
-
-    inset: 0;
-
-    background:
-        rgba(0,0,0,.65);
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    z-index: 10000;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.modal-box {
-    width: 420px;
-
-    background: var(--panel);
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 16px;
-
-    padding: 22px;
-
-    box-shadow:
-        0 20px 70px rgba(0,0,0,.5);
-}
-
-.modal-box h2 {
-    margin: 0 0 15px;
-
-    font-size: 18px;
-}
-
-.modal-box p {
-    color: var(--muted);
-
-    font-size: 13px;
-
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-
-    justify-content: flex-end;
-
-    gap: 8px;
-
-    margin-top: 20px;
-}
-
-
-/* =========================================================
-   PLUGIN CONTAINER
-========================================================= */
-
-#plugin-container {
-    position: fixed;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    z-index: 9000;
-}
-
-#plugin-container > * {
-    pointer-events: auto;
-}
-
-
-@media (max-width: 900px) {
-
-    .notes {
-        width: 280px;
-    }
-
-}
-
-@media (max-width: 700px) {
-
-    .notes {
-        display: none;
-    }
-
-    .logo {
-        min-width: auto;
-    }
-
-    .logo span {
-        display: none;
-    }
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="app">
-
-```
-<!-- =====================================================
-     HEADER
-====================================================== -->
-
-<header class="header">
-
-    <div class="logo">
-
-        <div class="logo-icon">
-            ✎
-        </div>
-
-        <span>
-            NotePaint
-        </span>
-
-    </div>
-
-
-    <input
-        id="title"
-        class="title-input"
-        placeholder="Название заметки..."
-        autocomplete="off"
-    >
-
-
-    <div class="save-status">
-
-        <div class="status-dot"></div>
-
-        <span id="saveStatus">
-            Сохранено
-        </span>
-
-    </div>
-
-</header>
-
-
-
-<main class="main">
-
-
-    <!-- =================================================
-         LEFT TOOLBAR
-    ================================================== -->
-
-    <aside class="toolbar">
-
-
-        <button
-            class="tool active"
-            data-tool="brush"
-            title="Кисть"
-        >
-            ✎
-        </button>
-
-
-        <button
-            class="tool"
-            data-tool="eraser"
-            title="Ластик"
-        >
-            ◩
-        </button>
-
-
-        <button
-            class="tool"
-            data-tool="line"
-            title="Линия"
-        >
-            ╱
-        </button>
-
-
-        <button
-            class="tool"
-            data-tool="rectangle"
-            title="Прямоугольник"
-        >
-            □
-        </button>
-
-
-        <button
-            class="tool"
-            data-tool="circle"
-            title="Круг"
-        >
-            ○
-        </button>
-
-
-        <div class="separator"></div>
-
-
-        <button
-            class="tool"
-            id="undo"
-            title="Отменить"
-        >
-            ↶
-        </button>
-
-
-        <button
-            class="tool"
-            id="redo"
-            title="Повторить"
-        >
-            ↷
-        </button>
-
-
-        <div class="separator"></div>
-
-
-        <button
-            class="tool"
-            id="clear"
-            title="Очистить холст"
-        >
-            🗑
-        </button>
-
-
-        <div class="tool-bottom">
-
-            <button
-                class="tool"
-                id="download"
-                title="Скачать рисунок"
-            >
-                ↓
-            </button>
-
-        </div>
-
-
-    </aside>
-
-
-
-    <!-- =================================================
-         WORKSPACE
-    ================================================== -->
-
-    <section class="workspace">
-
-
-        <div class="paint-toolbar">
-
-
-            <div class="group">
-
-                <div
-                    class="color"
-                    id="colorPreview"
-                >
-
-                    <input
-                        type="color"
-                        id="color"
-                        value="#17181c"
-                    >
-
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Web OS</title>
+        <link rel="stylesheet" href="./Css/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <section class="Boot_section">
+            <img src="./assets/Img/Light.png" alt="">
+
+            <div class="bottem_bottom">
+                <div class="loader"></div>
+
+                <div class="main_logo_text">
+                    <div class="logo">
+                        <img src="./assets/Img/Dark.png" alt="">
+                    </div>
+                    <p>ubuntu</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="Home_Screen">
+            <header class="Top_Bar">
+                <div class="Top_left"> </div>
+
+                <div class="Top_Center">
+                    <span class="Date">Sat Aug 22 </span>
+                    <span class="Timne">6:10 PM</span>
                 </div>
 
-            </div>
+                <div class="Top_right">
+                    <i class="ri-wifi-fill"></i>
+                    <i class="ri-volume-up-fill"></i>
+                    <i class="ri-battery-2-charge-fill"></i>
+                    <p>100%</p>
+                </div>
+            </header>
+
+            <main class="mid_Section">
+                <aside class="Dock">
+                    <div class="Dock_up">
+                        <div class="desktop_App file_mangaer">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/folder-3d-icon-png-download-8511787.png?f=webp"
+                                alt="Folder">
+                        </div>
+
+                        <div class="desktop_App text_editor">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/clipboard-3d-icon-png-download-8511778.png"
+                                alt="Text Editer">
+                        </div>
+
+                        <div class="desktop_App terminal">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/terminal-console-3d-icon-png-download-11901794.png?f=webp"
+                                alt="Terminal">
+                        </div>
+
+                        <div class="desktop_App music_player">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/headphone-3d-icon-png-download-8511772.png"
+                                alt="Music Player">
+                        </div>
+
+                        <div class="desktop_App video_player">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/video-3d-icon-png-download-10331277.png?f=webp"
+                                alt="Video">
+                        </div>
+
+                        <div class="desktop_App setting">
+                            <img class="img"
+                                src="http://cdn.iconscout.com/icon/premium/png-512-thumb/setting-icon-svg-download-png-837667.png?f=webp&w=256"
+                                alt="Setting">
+                        </div>
+                    </div>
+
+                    <div class="Dock_Down">
+                        <div class="desktop_App System_manu">
+                            <i class="ri-settings-3-line"></i>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="Main_Area">
+
+                    <section class="system_manu_section">
+                        <div class="desktop_App file_mangaer">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/folder-3d-icon-png-download-8511787.png?f=webp"
+                                alt="Folder">
+                            <p>File Manager</p>
+                        </div>
+
+                        <div class="desktop_App terminal">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/terminal-console-3d-icon-png-download-11901794.png?f=webp"
+                                alt="Terminal">
+                            <p>Terminal</p>
+                        </div>
+
+                        <div class="desktop_App text_editor">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/clipboard-3d-icon-png-download-8511778.png"
+                                alt="Text Editer">
+                            <p>Text Editor</p>
+                        </div>
+
+                        <div class="desktop_App music_player">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/headphone-3d-icon-png-download-8511772.png"
+                                alt="Music Player">
+                            <p>Music Player</p>
+                        </div>
+
+                        <div class="desktop_App video_player">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/video-3d-icon-png-download-10331277.png?f=webp"
+                                alt="Video Player">
+                            <p>Video Player</p>
+                        </div>
+
+                        <div class="desktop_App setting">
+                            <img class="img"
+                                src="http://cdn.iconscout.com/icon/premium/png-512-thumb/setting-icon-svg-download-png-837667.png?f=webp&w=256"
+                                alt="Setting">
+                            <p>Settings</p>
+                        </div>
+                    </section>
+
+                    <div class="shoercut_list">
+                        <p>Settings = Win + I</p>
+                        <p>Terminal = Win + T</p>
+                        <p>Text Editer = Win + E</p>
+                        <p>File Manger = Win + F </p>
+                        <p>Video Player = Win + V</p>
+                        <p>Music Player = Win + M</p>
+                    </div>
+
+                    <div class="Desktop_apps">
+                        <div class="desktop_App file_mangaer">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/folder-3d-icon-png-download-8511787.png?f=webp"
+                                alt="Folder">
+                            <p>File Manager</p>
+                        </div>
+
+                        <div class="desktop_App terminal">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/terminal-console-3d-icon-png-download-11901794.png?f=webp"
+                                alt="Terminal">
+                            <p>Terminal</p>
+                        </div>
+
+                        <div class="desktop_App text_editor">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/clipboard-3d-icon-png-download-8511778.png"
+                                alt="Text Editer">
+                            <p>Text Editor</p>
+                        </div>
+
+                        <div class="desktop_App music_player">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/headphone-3d-icon-png-download-8511772.png"
+                                alt="Music Player">
+                            <p>Music Player</p>
+                        </div>
+
+                        <div class="desktop_App video_player">
+                            <img class="img"
+                                src="https://cdn3d.iconscout.com/3d/premium/thumb/video-3d-icon-png-download-10331277.png?f=webp"
+                                alt="Video Player">
+                            <p>Video Player</p>
+                        </div>
+
+                        <div class="desktop_App setting">
+                            <img class="img"
+                                src="http://cdn.iconscout.com/icon/premium/png-512-thumb/setting-icon-svg-download-png-837667.png?f=webp&w=256"
+                                alt="Setting">
+                            <p>Settings</p>
+                        </div>
+                    </div>
+
+                    <div class="folder_view">
+                        <div class="folder_haeder">
+                            <div class="folder_haeder_left">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/folder-3d-icon-png-download-8511787.png?f=webp"
+                                    alt="Folder">
+                                <p>File Manager</p>
+                            </div>
+
+                            <div class="header_button">
+                                <button class="btn folder_minimize_button">
+                                    <i class="ri-subtract-fill"></i>
+                                </button>
+                                <button class="btn folder_Maximize_button">
+                                    <i class="ri-fullscreen-fill"></i>
+                                </button>
+                                <button class="btn folder_Close_button">
+                                    <i class="ri-close-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="folder_haeder_Manu">
+                            <div class="btn_folder">
+                                <button class="btn backward">
+                                    <i class="ri-arrow-left-long-fill"></i>
+                                    Back
+                                </button>
+                                <button class="btn forward">
+                                    Forward
+                                    <i class="ri-arrow-right-long-fill"></i>
+                                </button>
+                                <button class="btn new_folder">
+                                    <i class="ri-folder-add-fill"></i>
+                                    New Folder
+                                </button>
+                                <button class="btn refresh">
+                                    <i class="ri-restart-fill"></i>
+                                    Refresh
+                                </button>
+                            </div>
+
+                            <p class="folder_path"></p>
+                        </div>
+
+                        <div class="folder_main_section">
+                            <div class="folder_main_section_inner"> </div>
+                        </div>
+                    </div>
+
+                    <div class="terminal_view">
+                        <div class="terminal_haeder">
+                            <div class="terminal_haeder_left">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/terminal-console-3d-icon-png-download-11901794.png?f=webp"
+                                    alt="Terminal">
+                                <p>Terminal</p>
+                            </div>
+
+                            <div class="header_button">
+                                <button class="btn terminal_minimize_button">
+                                    <i class="ri-subtract-fill"></i>
+                                </button>
+                                <button class="btn terminal_Maximize_button">
+                                    <i class="ri-fullscreen-fill"></i>
+                                </button>
+                                <button class="btn terminal_Close_button">
+                                    <i class="ri-close-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <form class="terminal_main">
+                            <div class="terminal_innerpart">
+                                <p>WebOS Terminal v1.0.0</p>
+                                <p>Type "help" for avalible command </p>
+                                <div>
+                                    <span> WebOS :~ $ </span>
+                                    <textarea placeholder="Start writing here ...."></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="text_editor_view">
+                        <div class="text_editor_haeder">
+                            <div class="text_editor_haeder_left">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/clipboard-3d-icon-png-download-8511778.png"
+                                    alt="Text Editer">
+                                <p>Text Editor</p>
+                            </div>
+
+                            <div class="header_button">
+                                <button class="btn text_editor_minimize_button">
+                                    <i class="ri-subtract-fill"></i>
+                                </button>
+                                <button class="btn text_editor_Maximize_button">
+                                    <i class="ri-fullscreen-fill"></i>
+                                </button>
+                                <button class="btn text_editor_Close_button">
+                                    <i class="ri-close-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text_editor_haeder_Manu">
+                            <button class="btn">
+                                <i class="ri-file-ai-line"></i>
+                                New
+                            </button>
+                            <button class="btn">
+                                <i class="ri-file-list-line"></i>
+                                Open
+                            </button>
+                            <button class="btn">
+                                <i class="ri-file-download-line"></i>
+                                Save
+                            </button>
+                            <button class="btn">
+                                <i class="ri-file-copy-line"></i>
+                                Copy
+                            </button>
+                            <button class="btn">
+                                <i class="ri-clipboard-line"></i>
+                                Paste
+                            </button>
+                        </div>
+
+                        <form class="text_editor_main">
+                            <textarea class="" placeholder="Start writing here ...."></textarea>
+                        </form>
+                    </div>
+
+                    <div class="Music_player_view">
+                        <div class="Music_player_haeder">
+                            <div class="Music_player_haeder_left">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/headphone-3d-icon-png-download-8511772.png"
+                                    alt="Music Player">
+                                <p>Music Player</p>
+                            </div>
+
+                            <div class="header_button">
+                                <button class="btn Music_player_minimize_button">
+                                    <i class="ri-subtract-fill"></i>
+                                </button>
+                                <button class="btn Music_player_Maximize_button">
+                                    <i class="ri-fullscreen-fill"></i>
+                                </button>
+                                <button class="btn Music_player_Close_button">
+                                    <i class="ri-close-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="Music_player_haeder_Manu">
+                            <h2>Music Player</h2>
+                        </div>
+
+                        <div class="Music_player_Main">
+                            <div class="Music_player_Main_center">
+                                <img class="music_img"
+                                    src="https://cdn3d.iconscout.com/3d/premium/thumb/music-note-3d-icon-png-download-5873330.png?f=webp"
+                                    alt="">
+
+                                <h2>Now Playing</h2>
+                                <p>No music selected</p>
+                            </div>
+                            <div class="Music_player_Main_bottom">
+                                <input type="range">
+                                <div class="btn">
+                                    <button class="music_back">
+                                        <i class="ri-arrow-left-circle-line"></i>
+                                    </button>
+                                    <button class="music_Pause" style="display: none;">
+                                        <i class="ri-pause-circle-line"></i>
+                                    </button>
+                                    <button class="music_play">
+                                        <i class="ri-play-circle-line"></i>
+                                    </button>
+                                    <button class="music_forward">
+                                        <i class="ri-arrow-right-circle-line"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting_view">
+                        <div class="setting_haeder">
+                            <div class="setting_haeder_left">
+                                <img src="http://cdn.iconscout.com/icon/premium/png-512-thumb/setting-icon-svg-download-png-837667.png?f=webp&w=256"
+                                    alt="Terminal">
+                                <p>Settings</p>
+                            </div>
+
+                            <div class="header_button">
+                                <button class="btn setting_minimize_button">
+                                    <i class="ri-subtract-fill"></i>
+                                </button>
+                                <button class="btn setting_Maximize_button">
+                                    <i class="ri-fullscreen-fill"></i>
+                                </button>
+                                <button class="btn setting_Close_button">
+                                    <i class="ri-close-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <form class="setting_main">
+                            <div class="setting_up">
+                                <p class="os">Operating System : <Span></Span></p>
+                                <p class="platform">Platform : <Span></Span></p>
+                                <p class="lang">Language : <Span></Span></p>
+                            </div>
+                            <div class="setting_down">
+                                <button class="off">Power Off</button>
+                                <button class="reset">Restart</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="Video_player_view">
+                        <div class="Video_player_haeder">
+                            <div class="Video_player_haeder_left">
+                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/video-3d-icon-png-download-10331277.png?f=webp"
+                                    alt="Video">
+                                <p>Video Player</p>
+                            </div>
+
+                            <div class="header_button">
+                                <button class="btn Video_player_minimize_button">
+                                    <i class="ri-subtract-fill"></i>
+                                </button>
+                                <button class="btn Video_player_Maximize_button">
+                                    <i class="ri-fullscreen-fill"></i>
+                                </button>
+                                <button class="btn Video_player_Close_button">
+                                    <i class="ri-close-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="Video_player_Main">
+                            <div class="Video_player_Main_center">
+                                <video
+                                    src="https://avtshare01.rz.tu-ilmenau.de/avt-vqdb-uhd-1/test_1/segments/bigbuck_bunny_8bit_2000kbps_1080p_60.0fps_h264.mp4"></video>
+                            </div>
+                            <div class="Video_player_Main_bottom">
+                                <input type="range">
+                                <div class="btn">
+                                    <button>
+                                        <i class="ri-arrow-left-circle-line"></i>
+                                    </button>
+                                    <button>
+                                        <i class="ri-pause-circle-line"></i>
+                                    </button>
+                                    <button>
+                                        <i class="ri-arrow-right-circle-line"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+        </section>
+
+        <script src="./script.js"></script>
+    </body>
 
-
-            <div class="group">
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#17181c"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#ffffff"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#ff3b30"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#ff9500"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#ffcc00"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#34c759"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#007aff"
-                >
-                    ●
-                </button>
-
-
-                <button
-                    class="mini-btn preset"
-                    data-color="#af52de"
-                >
-                    ●
-                </button>
-
-
-            </div>
-
-
-            <div class="group">
-
-
-                <span class="size-label">
-                    Размер
-                </span>
-
-
-                <input
-                    type="range"
-                    id="size"
-                    min="1"
-                    max="80"
-                    value="8"
-                >
-
-
-                <span
-                    id="sizeValue"
-                    class="size-label"
-                >
-                    8 px
-                </span>
-
-
-            </div>
-
-
-            <div class="group">
-
-                <button
-                    class="mini-btn"
-                    id="newCanvas"
-                >
-                    Новый лист
-                </button>
-
-            </div>
-
-
-        </div>
-
-
-
-        <div class="canvas-area">
-
-            <div class="canvas-wrapper">
-
-                <canvas
-                    id="canvas"
-                    width="1200"
-                    height="750"
-                ></canvas>
-
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- =================================================
-         NOTES
-    ================================================== -->
-
-    <aside class="notes">
-
-
-        <div class="notes-header">
-
-            Заметки
-
-            <span id="wordCount">
-                0 слов
-            </span>
-
-        </div>
-
-
-        <textarea
-            id="notes"
-            placeholder="Пиши здесь свои мысли...
-```
-
-Можно использовать это как обычный блокнот, а слева рисовать схемы, картинки и пометки.
-
-Изменения автоматически сохраняются каждые 5 секунд."
-></textarea>
-
-```
-        <div class="notes-footer">
-
-            <span>
-                Локальное сохранение
-            </span>
-
-            <span>
-                Ctrl + S
-            </span>
-
-        </div>
-
-
-    </aside>
-
-
-</main>
-```
-
-</div>
-
-<!-- =========================================================
-     CLEAR MODAL
-========================================================== -->
-
-<div
-    class="modal"
-    id="confirmModal"
->
-
-```
-<div class="modal-box">
-
-    <h2>
-        Очистить холст?
-    </h2>
-
-
-    <p>
-        Все рисунки на текущем холсте будут удалены.
-        Это действие можно отменить через Ctrl + Z.
-    </p>
-
-
-    <div class="modal-actions">
-
-        <button
-            class="mini-btn"
-            id="cancelClear"
-        >
-            Отмена
-        </button>
-
-
-        <button
-            class="mini-btn"
-            id="confirmClear"
-        >
-            Очистить
-        </button>
-
-    </div>
-
-</div>
-```
-
-</div>
-
-<!-- =========================================================
-     PLUGIN CONTAINER
-========================================================== -->
-
-<div id="plugin-container"></div>
-
-<script>
-
-/* ============================================================
-   NOTEPAINT CORE
-============================================================ */
-
-
-const canvas =
-    document.getElementById("canvas");
-
-const ctx =
-    canvas.getContext("2d");
-
-
-const notes =
-    document.getElementById("notes");
-
-const title =
-    document.getElementById("title");
-
-
-const colorInput =
-    document.getElementById("color");
-
-const colorPreview =
-    document.getElementById("colorPreview");
-
-
-const sizeInput =
-    document.getElementById("size");
-
-const sizeValue =
-    document.getElementById("sizeValue");
-
-
-const saveStatus =
-    document.getElementById("saveStatus");
-
-const wordCount =
-    document.getElementById("wordCount");
-
-
-let tool = "brush";
-
-let drawing = false;
-
-let startX = 0;
-let startY = 0;
-
-
-let undoStack = [];
-let redoStack = [];
-
-
-/* ============================================================
-   EVENTS
-============================================================ */
-
-
-const EventBus = {
-
-    events: {},
-
-
-    on(name, callback) {
-
-        if (!this.events[name]) {
-            this.events[name] = [];
-        }
-
-        this.events[name].push(callback);
-
-    },
-
-
-    emit(name, data) {
-
-        if (!this.events[name]) {
-            return;
-        }
-
-        for (const callback of this.events[name]) {
-
-            try {
-                callback(data);
-            }
-            catch (error) {
-                console.error(error);
-            }
-
-        }
-
-    }
-
-};
-
-
-/* ============================================================
-   CANVAS
-============================================================ */
-
-
-function setupCanvas() {
-
-    ctx.globalCompositeOperation =
-        "source-over";
-
-    ctx.fillStyle =
-        "#ffffff";
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-}
-
-
-setupCanvas();
-
-
-function saveCanvasState() {
-
-    undoStack.push(
-        canvas.toDataURL()
-    );
-
-
-    if (undoStack.length > 40) {
-
-        undoStack.shift();
-
-    }
-
-
-    redoStack = [];
-
-}
-
-
-function restoreState(data) {
-
-    const image =
-        new Image();
-
-
-    image.onload = () => {
-
-        ctx.globalCompositeOperation =
-            "source-over";
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        ctx.drawImage(
-            image,
-            0,
-            0
-        );
-
-    };
-
-
-    image.src = data;
-
-}
-
-
-/* ============================================================
-   MOUSE POSITION
-============================================================ */
-
-
-function getMousePosition(event) {
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-
-    return {
-
-        x:
-            (event.clientX - rect.left)
-            *
-            (canvas.width / rect.width),
-
-        y:
-            (event.clientY - rect.top)
-            *
-            (canvas.height / rect.height)
-
-    };
-
-}
-
-
-/* ============================================================
-   DRAWING
-============================================================ */
-
-
-canvas.addEventListener(
-    "mousedown",
-    event => {
-
-        saveCanvasState();
-
-        drawing = true;
-
-
-        const position =
-            getMousePosition(event);
-
-
-        startX =
-            position.x;
-
-        startY =
-            position.y;
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            startX,
-            startY
-        );
-
-
-        if (
-            tool === "brush" ||
-            tool === "eraser"
-        ) {
-
-            drawPoint(
-                position.x,
-                position.y
-            );
-
-        }
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousemove",
-    event => {
-
-        if (!drawing) {
-            return;
-        }
-
-
-        const position =
-            getMousePosition(event);
-
-
-        if (
-            tool === "brush" ||
-            tool === "eraser"
-        ) {
-
-            drawPoint(
-                position.x,
-                position.y
-            );
-
-        }
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mouseup",
-    event => {
-
-        if (!drawing) {
-            return;
-        }
-
-
-        drawing = false;
-
-
-        const position =
-            getMousePosition(event);
-
-
-        if (tool === "line") {
-
-            drawLine(
-                startX,
-                startY,
-                position.x,
-                position.y
-            );
-
-        }
-
-
-        if (tool === "rectangle") {
-
-            drawRectangle(
-                startX,
-                startY,
-                position.x,
-                position.y
-            );
-
-        }
-
-
-        if (tool === "circle") {
-
-            drawCircle(
-                startX,
-                startY,
-                position.x,
-                position.y
-            );
-
-        }
-
-
-        ctx.closePath();
-
-
-        markChanged();
-
-
-        EventBus.emit(
-            "draw",
-            {
-                tool
-            }
-        );
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mouseleave",
-    () => {
-
-        drawing = false;
-
-    }
-);
-
-
-/* ============================================================
-   BRUSH
-============================================================ */
-
-
-function prepareBrush() {
-
-    ctx.lineWidth =
-        Number(sizeInput.value);
-
-
-    ctx.lineCap =
-        "round";
-
-
-    ctx.lineJoin =
-        "round";
-
-
-    if (tool === "eraser") {
-
-        ctx.globalCompositeOperation =
-            "destination-out";
-
-    }
-    else {
-
-        ctx.globalCompositeOperation =
-            "source-over";
-
-
-        ctx.strokeStyle =
-            colorInput.value;
-
-
-        ctx.fillStyle =
-            colorInput.value;
-
-    }
-
-}
-
-
-function drawPoint(x, y) {
-
-    prepareBrush();
-
-
-    ctx.lineTo(
-        x,
-        y
-    );
-
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x,
-        y
-    );
-
-}
-
-
-function drawLine(
-    x1,
-    y1,
-    x2,
-    y2
-) {
-
-    prepareBrush();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x1,
-        y1
-    );
-
-    ctx.lineTo(
-        x2,
-        y2
-    );
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-}
-
-
-function drawRectangle(
-    x1,
-    y1,
-    x2,
-    y2
-) {
-
-    prepareBrush();
-
-
-    ctx.beginPath();
-
-
-    ctx.rect(
-        x1,
-        y1,
-        x2 - x1,
-        y2 - y1
-    );
-
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-}
-
-
-function drawCircle(
-    x1,
-    y1,
-    x2,
-    y2
-) {
-
-    prepareBrush();
-
-
-    const dx =
-        x2 - x1;
-
-    const dy =
-        y2 - y1;
-
-
-    const radius =
-        Math.sqrt(
-            dx * dx +
-            dy * dy
-        );
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        x1,
-        y1,
-        radius,
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-}
-
-
-/* ============================================================
-   TOOLS
-============================================================ */
-
-
-function selectTool(toolName) {
-
-    tool =
-        toolName;
-
-
-    document
-        .querySelectorAll(
-            ".tool[data-tool]"
-        )
-        .forEach(
-            button => {
-
-                button.classList.remove(
-                    "active"
-                );
-
-            }
-        );
-
-
-    const button =
-        document.querySelector(
-            `[data-tool="${toolName}"]`
-        );
-
-
-    if (button) {
-
-        button.classList.add(
-            "active"
-        );
-
-    }
-
-
-    canvas.style.cursor =
-        toolName === "eraser"
-            ? "cell"
-            : "crosshair";
-
-
-    EventBus.emit(
-        "toolChanged",
-        toolName
-    );
-
-}
-
-
-document
-    .querySelectorAll(
-        ".tool[data-tool]"
-    )
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    selectTool(
-                        button.dataset.tool
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-/* ============================================================
-   COLORS
-============================================================ */
-
-
-colorInput.addEventListener(
-    "input",
-    () => {
-
-        colorPreview.style.background =
-            colorInput.value;
-
-
-        if (tool === "eraser") {
-
-            selectTool("brush");
-
-        }
-
-        markChanged();
-
-    }
-);
-
-
-document
-    .querySelectorAll(".preset")
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    colorInput.value =
-                        button.dataset.color;
-
-
-                    colorPreview.style.background =
-                        colorInput.value;
-
-
-                    selectTool("brush");
-
-                    markChanged();
-
-                }
-            );
-
-        }
-    );
-
-
-/* ============================================================
-   SIZE
-============================================================ */
-
-
-sizeInput.addEventListener(
-    "input",
-    () => {
-
-        sizeValue.textContent =
-            sizeInput.value + " px";
-
-
-        EventBus.emit(
-            "brushSizeChanged",
-            Number(sizeInput.value)
-        );
-
-        markChanged();
-
-    }
-);
-
-
-/* ============================================================
-   UNDO
-============================================================ */
-
-
-function undo() {
-
-    if (undoStack.length === 0) {
-        return;
-    }
-
-
-    redoStack.push(
-        canvas.toDataURL()
-    );
-
-
-    const state =
-        undoStack.pop();
-
-
-    restoreState(state);
-
-
-    markChanged();
-
-
-    EventBus.emit(
-        "undo"
-    );
-
-}
-
-
-document
-    .getElementById("undo")
-    .addEventListener(
-        "click",
-        undo
-    );
-
-
-/* ============================================================
-   REDO
-============================================================ */
-
-
-function redo() {
-
-    if (redoStack.length === 0) {
-        return;
-    }
-
-
-    undoStack.push(
-        canvas.toDataURL()
-    );
-
-
-    const state =
-        redoStack.pop();
-
-
-    restoreState(state);
-
-
-    markChanged();
-
-
-    EventBus.emit(
-        "redo"
-    );
-
-}
-
-
-document
-    .getElementById("redo")
-    .addEventListener(
-        "click",
-        redo
-    );
-
-
-/* ============================================================
-   CLEAR
-============================================================ */
-
-
-const modal =
-    document.getElementById(
-        "confirmModal"
-    );
-
-
-document
-    .getElementById("clear")
-    .addEventListener(
-        "click",
-        () => {
-
-            modal.classList.add(
-                "show"
-            );
-
-        }
-    );
-
-
-document
-    .getElementById("cancelClear")
-    .addEventListener(
-        "click",
-        () => {
-
-            modal.classList.remove(
-                "show"
-            );
-
-        }
-    );
-
-
-document
-    .getElementById("confirmClear")
-    .addEventListener(
-        "click",
-        clearCanvas
-    );
-
-
-function clearCanvas() {
-
-    saveCanvasState();
-
-
-    ctx.globalCompositeOperation =
-        "source-over";
-
-
-    ctx.fillStyle =
-        "#ffffff";
-
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    modal.classList.remove(
-        "show"
-    );
-
-
-    markChanged();
-
-
-    EventBus.emit(
-        "clear"
-    );
-
-}
-
-
-/* ============================================================
-   NEW CANVAS
-============================================================ */
-
-
-document
-    .getElementById("newCanvas")
-    .addEventListener(
-        "click",
-        () => {
-
-            saveCanvasState();
-
-
-            ctx.globalCompositeOperation =
-                "source-over";
-
-
-            ctx.fillStyle =
-                "#ffffff";
-
-
-            ctx.fillRect(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-
-            markChanged();
-
-
-            EventBus.emit(
-                "newCanvas"
-            );
-
-        }
-    );
-
-
-/* ============================================================
-   DOWNLOAD
-============================================================ */
-
-
-function downloadImage() {
-
-    const link =
-        document.createElement("a");
-
-
-    link.download =
-        (
-            title.value.trim() ||
-            "notepaint"
-        ) + ".png";
-
-
-    link.href =
-        canvas.toDataURL(
-            "image/png"
-        );
-
-
-    link.click();
-
-
-    EventBus.emit(
-        "download"
-    );
-
-}
-
-
-document
-    .getElementById("download")
-    .addEventListener(
-        "click",
-        downloadImage
-    );
-
-
-/* ============================================================
-   WORD COUNT
-============================================================ */
-
-
-notes.addEventListener(
-    "input",
-    () => {
-
-        updateWordCount();
-
-        markChanged();
-
-        EventBus.emit(
-            "notesChanged",
-            notes.value
-        );
-
-    }
-);
-
-
-function updateWordCount() {
-
-    const text =
-        notes.value.trim();
-
-
-    const count =
-        text.length === 0
-            ? 0
-            : text.split(/\s+/).length;
-
-
-    wordCount.textContent =
-        count +
-        (
-            count === 1
-                ? " слово"
-                : " слов"
-        );
-
-}
-
-
-title.addEventListener(
-    "input",
-    () => {
-
-        markChanged();
-
-        EventBus.emit(
-            "titleChanged",
-            title.value
-        );
-
-    }
-);
-
-
-/* ============================================================
-   STORAGE
-============================================================ */
-
-
-function markChanged() {
-
-    saveStatus.textContent =
-        "Есть несохранённые изменения";
-
-}
-
-
-function saveAll() {
-
-    const data = {
-
-        title:
-            title.value,
-
-        notes:
-            notes.value,
-
-        canvas:
-            canvas.toDataURL(
-                "image/png"
-            ),
-
-        savedAt:
-            Date.now()
-
-    };
-
-
-    try {
-
-        localStorage.setItem(
-            "notepaint_data",
-            JSON.stringify(data)
-        );
-
-
-        saveStatus.textContent =
-            "Сохранено";
-
-
-        EventBus.emit(
-            "save",
-            data
-        );
-
-    }
-    catch (error) {
-
-        saveStatus.textContent =
-            "Ошибка сохранения";
-
-
-        console.error(
-            "[NotePaint]",
-            error
-        );
-
-    }
-
-}
-
-
-/*
-    АВТОСОХРАНЕНИЕ КАЖДЫЕ 5 СЕКУНД
-*/
-
-setInterval(
-    saveAll,
-    5000
-);
-
-
-/* ============================================================
-   LOAD
-============================================================ */
-
-
-function loadAll() {
-
-    const saved =
-        localStorage.getItem(
-            "notepaint_data"
-        );
-
-
-    if (!saved) {
-        return;
-    }
-
-
-    try {
-
-        const data =
-            JSON.parse(saved);
-
-
-        title.value =
-            data.title || "";
-
-
-        notes.value =
-            data.notes || "";
-
-
-        if (data.canvas) {
-
-            restoreState(
-                data.canvas
-            );
-
-        }
-
-
-        updateWordCount();
-
-
-        saveStatus.textContent =
-            "Восстановлено";
-
-    }
-    catch (error) {
-
-        console.error(
-            "[NotePaint]",
-            error
-        );
-
-    }
-
-}
-
-
-loadAll();
-
-
-/* ============================================================
-   NOTEPAINT API
-============================================================ */
-
-
-window.NotePaint = {
-
-    version: "1.0.0",
-
-
-    canvas: {
-
-        getCanvas() {
-            return canvas;
-        },
-
-        getContext() {
-            return ctx;
-        },
-
-        clear() {
-            clearCanvas();
-        },
-
-        saveState() {
-            saveCanvasState();
-        },
-
-        undo() {
-            undo();
-        },
-
-        redo() {
-            redo();
-        },
-
-        download() {
-            downloadImage();
-        }
-
-    },
-
-
-    notes: {
-
-        get() {
-            return notes.value;
-        },
-
-        set(value) {
-            notes.value = value;
-            updateWordCount();
-            markChanged();
-        }
-
-    },
-
-
-    title: {
-
-        get() {
-            return title.value;
-        },
-
-        set(value) {
-            title.value = value;
-            markChanged();
-        }
-
-    },
-
-
-    tools: {
-
-        getCurrent() {
-            return tool;
-        },
-
-        select(name) {
-            selectTool(name);
-        }
-
-    },
-
-
-    brush: {
-
-        getColor() {
-            return colorInput.value;
-        },
-
-        setColor(color) {
-
-            colorInput.value =
-                color;
-
-            colorPreview.style.background =
-                color;
-
-        },
-
-
-        getSize() {
-            return Number(
-                sizeInput.value
-            );
-        },
-
-        setSize(size) {
-
-            sizeInput.value =
-                size;
-
-            sizeValue.textContent =
-                size + " px";
-
-        }
-
-    },
-
-
-    storage: {
-
-        save() {
-            saveAll();
-        }
-
-    },
-
-
-    events: {
-
-        on(name, callback) {
-            EventBus.on(
-                name,
-                callback
-            );
-        }
-
-    },
-
-
-    ui: {
-
-        getPluginContainer() {
-
-            return document.getElementById(
-                "plugin-container"
-            );
-
-        }
-
-    }
-
-};
-
-
-
-/* ============================================================
-   PLUGIN MANAGER
-   ============================================================ */
-
-const PluginManager = {
-
-    plugins: [],
-
-    async loadAll() {
-
-        console.log("[NotePaint] Запуск Plugin Manager...");
-
-        try {
-
-            const response = await fetch(
-                "./plugins/plugins.json",
-                {
-                    cache: "no-cache"
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(
-                    `plugins.json: HTTP ${response.status}`
-                );
-            }
-
-            const list = await response.json();
-
-            if (!Array.isArray(list)) {
-                throw new Error(
-                    "plugins.json должен содержать массив"
-                );
-            }
-
-            console.log(
-                `[NotePaint] Найдено плагинов: ${list.length}`
-            );
-
-            for (const pluginPath of list) {
-
-                await this.load(pluginPath);
-
-            }
-
-            console.log(
-                "[NotePaint] Загрузка плагинов завершена."
-            );
-
-        }
-        catch (error) {
-
-            console.error(
-                "[NotePaint] Plugin Manager:",
-                error
-            );
-
-        }
-
-    },
-
-
-    async load(pluginPath) {
-
-        console.log(
-            "[NotePaint] Загружаю:",
-            pluginPath
-        );
-
-        try {
-
-            /*
-             * Нормализуем путь
-             */
-            const path =
-                pluginPath
-                    .replace(/^\/+/, "")
-                    .replace(/^plugins\//, "");
-
-            const url =
-                `./plugins/${path}`;
-
-
-            /*
-             * Загружаем HTML
-             */
-            const response = await fetch(
-                url,
-                {
-                    cache: "no-cache"
-                }
-            );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `HTTP ${response.status}`
-                );
-
-            }
-
-
-            const html =
-                await response.text();
-
-
-            if (!html.trim()) {
-
-                throw new Error(
-                    "Файл плагина пустой"
-                );
-
-            }
-
-
-            /*
-             * Создаём отдельный контейнер
-             */
-            const wrapper =
-                document.createElement("div");
-
-            wrapper.className =
-                "notepaint-plugin";
-
-            wrapper.dataset.plugin =
-                path;
-
-
-            /*
-             * Парсим HTML
-             */
-            const parser =
-                new DOMParser();
-
-            const parsed =
-                parser.parseFromString(
-                    html,
-                    "text/html"
-                );
-
-
-            /*
-             * ------------------------------------------------
-             * CSS
-             * ------------------------------------------------
-             */
-
-            parsed
-                .querySelectorAll("style")
-                .forEach(style => {
-
-                    const newStyle =
-                        document.createElement("style");
-
-                    newStyle.textContent =
-                        style.textContent;
-
-                    newStyle.dataset.plugin =
-                        path;
-
-                    document.head.appendChild(
-                        newStyle
-                    );
-
-                });
-
-
-            /*
-             * ------------------------------------------------
-             * HTML
-             * ------------------------------------------------
-             *
-             * Если есть:
-             *
-             * <div id="plugin">
-             *
-             * берём его содержимое.
-             *
-             * Если нет — берём body.
-             */
-
-            const pluginRoot =
-                parsed.querySelector("#plugin")
-                || parsed.body;
-
-
-            if (
-                pluginRoot &&
-                pluginRoot.innerHTML.trim()
-            ) {
-
-                wrapper.innerHTML =
-                    pluginRoot.innerHTML;
-
-            }
-
-
-            /*
-             * Добавляем HTML в контейнер
-             */
-            const pluginContainer =
-                document.getElementById(
-                    "plugin-container"
-                );
-
-
-            if (!pluginContainer) {
-
-                throw new Error(
-                    "#plugin-container не найден"
-                );
-
-            }
-
-
-            pluginContainer.appendChild(
-                wrapper
-            );
-
-
-            /*
-             * ------------------------------------------------
-             * JAVASCRIPT
-             * ------------------------------------------------
-             */
-
-            const scripts =
-                parsed.querySelectorAll(
-                    "script"
-                );
-
-
-            for (const oldScript of scripts) {
-
-                const script =
-                    document.createElement("script");
-
-
-                /*
-                 * Если у script есть src,
-                 * загружаем внешний файл.
-                 */
-
-                if (oldScript.src) {
-
-                    script.src =
-                        new URL(
-                            oldScript.getAttribute("src"),
-                            url
-                        ).href;
-
-                }
-                else {
-
-                    script.textContent =
-                        oldScript.textContent;
-
-                }
-
-
-                /*
-                 * Помечаем, к какому плагину
-                 * относится script.
-                 */
-
-                script.dataset.plugin =
-                    path;
-
-
-                document.body.appendChild(
-                    script
-                );
-
-            }
-
-
-            /*
-             * Сохраняем информацию
-             */
-
-            this.plugins.push({
-                path: path,
-                url: url
-            });
-
-
-            console.log(
-                `[NotePaint] ✓ Плагин загружен: ${path}`
-            );
-
-        }
-        catch (error) {
-
-            console.error(
-                `[NotePaint] ✗ Ошибка плагина: ${pluginPath}`,
-                error
-            );
-
-        }
-
-    }
-
-};
-
-
-
-
-PluginManager.loadAll();
-
-
-/* ============================================================
-   GLOBAL KEYBOARD EVENT
-============================================================ */
-
-window.addEventListener(
-    "keydown",
-    event => {
-
-        EventBus.emit(
-            "keydown",
-            event
-        );
-
-    },
-    true
-);
-
-
-/* ============================================================
-   INITIAL
-============================================================ */
-
-colorPreview.style.background =
-    colorInput.value;
-
-
-</script>
-
-</body>
 </html>
